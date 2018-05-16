@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+  <style>
+    table{
+      border-collapse: collapse;
+    }
+    table td,table th{
+      border: 1px solid #000;
+    }
+    table th{
+      background: #000000;
+      color: #ffffff;
+    }
+    table tr:nth-child(odd){
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+<main class="clearFix">
+  <div class="contentWrap_40 fl">
+    <p class="noteTwo">
+      利用 globalCompositeOperation 属性来改变这种状况。此外, clip属性允许我们隐藏不想看到的部分图形.
+    </p>
+    <p class="highContent">globalCompositeOperation</p>
+    <p>不仅可以在已有图形后面再画新图形，还可以用来遮盖指定区域，清除画布中的某些部分
+      （清除区域不仅限于矩形，像clearRect()方法做的那样 ）以及更多其他操作。</p>
+    <p>
+      globalCompositeOperation = type <br>
+      这个属性设定了在画新图形时采用的遮盖策略，其值是一个标识12种遮盖方式的字符串。
+    </p>
+    <table>
+      <tbody>
+      <tr>
+        <th style="width:20%;">值</th>
+        <th>描述</th>
+      </tr>
+
+      <tr>
+        <td>source-over</td>
+        <td>默认。在目标图像上显示源图像。</td>
+      </tr>
+
+      <tr>
+        <td>source-atop</td>
+        <td>在目标图像顶部显示源图像。源图像位于目标图像之外的部分是不可见的。</td>
+      </tr>
+
+      <tr>
+        <td>source-in</td>
+        <td>在目标图像中显示源图像。只有目标图像内的源图像部分会显示，目标图像是透明的。</td>
+      </tr>
+
+      <tr>
+        <td>source-out</td>
+        <td>在目标图像之外显示源图像。只会显示目标图像之外源图像部分，目标图像是透明的。</td>
+      </tr>
+
+      <tr>
+        <td>destination-over</td>
+        <td>在源图像上方显示目标图像。</td>
+      </tr>
+
+      <tr>
+        <td>destination-atop</td>
+        <td>在源图像顶部显示目标图像。源图像之外的目标图像部分不会被显示。</td>
+      </tr>
+
+      <tr>
+        <td>destination-in</td>
+        <td>在源图像中显示目标图像。只有源图像内的目标图像部分会被显示，源图像是透明的。</td>
+      </tr>
+
+      <tr>
+        <td>destination-out</td>
+        <td>在源图像外显示目标图像。只有源图像外的目标图像部分会被显示，源图像是透明的。</td>
+      </tr>
+
+      <tr>
+        <td>lighter</td>
+        <td>显示源图像 + 目标图像。</td>
+      </tr>
+
+      <tr>
+        <td>copy</td>
+        <td>显示源图像。忽略目标图像。</td>
+      </tr>
+
+      <tr>
+        <td>xor</td>
+        <td>使用异或操作对源图像与目标图像进行组合。</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="contentWrap_60 fr" id="wrap">
+
+  </div>
+</main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script src="./../js/ColorHSVToRGB.js"></script>
+<script>
+  /* ---------------------
+   * This code sets up the global values used by the rest of the program.
+    ---------------------*/
+  let canvas1 = document.createElement('canvas');
+  let canvas2 = document.createElement('canvas');
+
+  let gco = ['source-over', 'source-in', 'source-out', 'source-atop',
+    'destination-over', 'destination-in', 'destination-out', 'destination-atop',
+    'lighter', 'copy', 'xor', 'multiply', 'screen', 'overlay', 'darken',
+    'lighten', 'color-dodge', 'color-burn', 'hard-light', 'soft-light',
+    'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity'
+  ].reverse();
+
+  let gcoText = [
+    'This is the default setting and draws new shapes on top of the existing canvas content.',
+    'The new shape is drawn only where both the new shape and the destination canvas overlap. Everything else is made transparent.',
+    'The new shape is drawn where it doesn\'t overlap the existing canvas content.',
+    'The new shape is only drawn where it overlaps the existing canvas content.',
+    'New shapes are drawn behind the existing canvas content.',
+    'The existing canvas content is kept where both the new shape and existing canvas content overlap. Everything else is made transparent.',
+    'The existing content is kept where it doesn\'t overlap the new shape.',
+    'The existing canvas is only kept where it overlaps the new shape. The new shape is drawn behind the canvas content.',
+    'Where both shapes overlap the color is determined by adding color values.',
+    'Only the new shape is shown.',
+    'Shapes are made transparent where both overlap and drawn normal everywhere else.',
+    'The pixels are of the top layer are multiplied with the corresponding pixel of the bottom layer. A darker picture is the result.',
+    'The pixels are inverted, multiplied, and inverted again. A lighter picture is the result (opposite of multiply)',
+    'A combination of multiply and screen. Dark parts on the base layer become darker, and light parts become lighter.',
+    'Retains the darkest pixels of both layers.',
+    'Retains the lightest pixels of both layers.',
+    'Divides the bottom layer by the inverted top layer.',
+    'Divides the inverted bottom layer by the top layer, and then inverts the result.',
+    'A combination of multiply and screen like overlay, but with top and bottom layer swapped.',
+    'A softer version of hard-light. Pure black or white does not result in pure black or white.',
+    'Subtracts the bottom layer from the top layer or the other way round to always get a positive value.',
+    'Like difference, but with lower contrast.',
+    'Preserves the luma and chroma of the bottom layer, while adopting the hue of the top layer.',
+    'Preserves the luma and hue of the bottom layer, while adopting the chroma of the top layer.',
+    'Preserves the luma of the bottom layer, while adopting the hue and chroma of the top layer.',
+    'Preserves the hue and chroma of the bottom layer, while adopting the luma of the top layer.'
+  ].reverse();
+
+  let width = 320;
+  let height = 340;
+
+  /** --------------------
+   * When the page loads, this code runs
+   * to set up and run the example:
+   ---------------------*/
+  window.onload = function () {
+    // lum in sRGB
+    let lum = {
+      r: 0.33,
+      g: 0.33,
+      b: 0.33
+    };
+
+    // resize canvas
+    canvas1.width = width;
+    canvas1.height = height;
+    canvas2.width = width;
+    canvas2.height = height;
+
+    lightMix();
+    colorSphere();
+    runComposite();
+    return;
+  };
+
+  /*--- color ---*/
+  let createInterlace = function (size, color1, color2) {
+    let proto = createElement('canvas').getContext('2d');
+    proto.canvas.width = size * 2;
+    proto.canvas.heigth = size * 2;
+    proto.fillStyle = color1;
+    proto.fillRect(0, 0, size, size); // top-left
+    proto.fillStyle = color2;
+    proto.fillRect(size, 0, size, size); // top-right
+    proto.fillStyle = color2;
+    proto.fillRect(0, size, size, size); // bottom-left
+    proto.fillStyle = color1;
+    proto.fillRect(size, size, size, size); // bottom-right
+
+    let pattern = proto.createPattern(proto.canvas, 'repeat');
+    pattern.data = proto.canvas.toDataURL();
+    return pattern;
+  };
+
+  let op_8x8 = createInterlace(8, '#fff', '#eee');
+
+  /** ---------------------
+   * And this code, runComposite(),
+   * handles the bulk of the work, relying on a number of
+   * utility functions to do the hard parts.
+   ---------------------------*/
+  function createCanvas() {
+    let canvas = createElement('canvas');
+    canvas.style.background = `url(${op_8x8.data})`;
+    canvas.style.border = '1px solid #000';
+    canvas.style.margin = '5px';
+    canvas.width = width / 2;
+    canvas.height = height / 2;
+    return canvas;
+  }
+
+  function runComposite() {
+    let dl = createElement('dl');
+    append(document.getElementById('wrap'), dl);
+
+    while (gco.length) {
+      let pop = gco.pop();
+      let dt = createElement('dt');
+      dt.textContent = pop;
+      append(dl, dt);
+
+      let dd = createElement('dd');
+      let p = createElement('p');
+      p.textContent = gcoText.pop();
+      append(dd, p);
+
+      /*------- canvas ---- */
+      let canvasToDrawOn = createCanvas(); // 水平方向第一个矩形
+      let canvasToDrawFrom = createCanvas(); // 水平方向第二个矩形
+      let canvasToDrawResult = createCanvas(); // 水平方向第三个矩形
+
+      let ctxOn = canvasToDrawOn.getContext('2d');
+      ctxOn.clearRect(0, 0, width, height);
+      ctxOn.save();
+      ctxOn.drawImage(canvas1, 0, 0, width / 2, height / 2);
+      ctxOn.globalCompositeOperation = pop;
+      ctxOn.drawImage(canvas2, 0, 0, width / 2, height / 2);
+      ctxOn.globalCompositeOperation = 'source-over';
+      ctxOn.fillStyle = 'rgba(0,0,0,.8)';
+      ctxOn.fillRect(0, height / 2 - 20, width / 2, 20);
+      ctxOn.fillStyle = '#fff';
+      ctxOn.font = '14px arial';
+      ctxOn.fillText(pop, 5, height / 2 - 5);
+      ctxOn.restore();
+
+      let ctxFrom = canvasToDrawFrom.getContext('2d');
+      ctxFrom.clearRect(0, 0, width, height);
+      ctxFrom.save();
+      ctxFrom.drawImage(canvas1, 0, 0, width / 2, height / 2);
+      ctxFrom.fillStyle = 'rgba(0,0,0,0.8)';
+      ctxFrom.fillRect(0, height / 2 - 20, width / 2, 20);
+      ctxFrom.fillStyle = '#fff';
+      ctxFrom.font = '14px arial';
+      ctxFrom.fillText('existing content', 5, height / 2 - 5);
+      ctxFrom.restore();
+
+      let ctxRes = canvasToDrawResult.getContext('2d');
+      ctxRes.clearRect(0, 0, width, height);
+      ctxRes.save();
+      ctxRes.drawImage(canvas2, 0, 0, width / 2, height / 2);
+      ctxRes.fillStyle = 'rgba(0,0,0,.8)';
+      ctxRes.fillRect(0, height / 2 - 20, width / 2, 20);
+      ctxRes.fillStyle = '#fff';
+      ctxRes.font = '14px arial';
+      ctxRes.fillText('new content', 5, height / 2 - 5);
+      ctxRes.restore();
+
+      append(dd, canvasToDrawOn);
+      append(dd, canvasToDrawFrom);
+      append(dd, canvasToDrawResult);
+      /*------- canvas ---- */
+
+      append(dl, dd);
+    }
+  }
+
+  /** -------------------------------
+   * The program relies on a number of utility functions.
+   ----------------------------------*/
+    // 三原色图
+  let lightMix = function () {
+      let ctx = canvas2.getContext('2d');
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      // 红色的圆
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(255,0,0,1)';
+      ctx.arc(100, 200, 100, Math.PI * 2, 0, false);
+      ctx.fill();
+
+      // 蓝色的圆
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(0,0,255,1)';
+      ctx.arc(220, 200, 100, Math.PI * 2, 0, false);
+      ctx.fill();
+
+      // 绿色的圆
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(0,255,0,1)';
+      ctx.arc(160, 100, 100, Math.PI * 2, 0);
+      ctx.fill();
+      ctx.restore();
+
+      // 左上角一个白色矩形
+      ctx.beginPath();
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, 30, 30);
+      ctx.fill();
+    };
+
+  // 彩球
+  let colorSphere = function () {
+    let ctx = canvas1.getContext('2d');
+    let width = 360;
+    let halfWidth = width / 2;
+    let rotate = (1 / 360) * Math.PI * 2; // per degree
+    let offset = 0; // scrollbar offset
+    let oleft = -20;
+    let otop = -20;
+
+    for (let n = 0; n <= 359; n++) {
+      let gradient = ctx.createLinearGradient(oleft + halfWidth, otop, oleft + halfWidth, otop + halfWidth);
+      let color = Color.HSV_RGB({
+        H: (n + 300) % 360,
+        S: 100,
+        V: 100
+      });
+      gradient.addColorStop(0, 'rgba(0,0,0,0)');
+      gradient.addColorStop(0.7, `rgba(${color.R},${color.G},${color.B})`);
+      ctx.beginPath();
+      ctx.moveTo(oleft + halfWidth, otop);
+      ctx.lineTo(oleft + halfWidth, otop + halfWidth);
+      ctx.lineTo(oleft + halfWidth + 6, otop);
+      ctx.fillStyle = gradient;
+      ctx.fill();
+      ctx.translate(oleft + halfWidth, otop + halfWidth);
+      ctx.rotate(rotate);
+      ctx.translate(-(oleft + halfWidth), -(otop + halfWidth));
+    }
+
+    ctx.beginPath();
+    ctx.fillStyle = '#00f';
+    ctx.fillRect(15, 15, 30, 30);
+    ctx.fill();
+    return ctx.canvas;
+  };
+
+</script>

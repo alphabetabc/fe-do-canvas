@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+<main class="clearFix">
+  <div class="contentWrap fl">
+    <p>重绘是相当费时的，而且性能很依赖于电脑的速度。</p>
+    <h2>
+      动画的基本步骤
+    </h2>
+    <ol>
+      <li>
+        清空 canvas
+        <p>
+          除非接下来要画的内容会完全充满 canvas （例如背景图），否则你需要清空所有。最简单的做法就是用 clearRect 方法。
+        </p>
+      </li>
+      <li>
+        保存 canvas 状态
+        <p>
+          如果你要改变一些会改变 canvas 状态的设置（样式，变形之类的），又要在每画一帧之时都是原始状态的话，你需要先保存一下。
+        </p>
+      </li>
+      <li>
+        绘制动画图形（animated shapes）
+        <p>这一步才是重绘动画帧。</p>
+      </li>
+      <li>
+        恢复 canvas 状态
+        <p>如果已经保存了 canvas 的状态，可以先恢复它，然后重绘下一帧。</p>
+      </li>
+    </ol>
+
+    <h2 class="highContent">
+      有安排的更新画布 Scheduled updates
+    </h2>
+    <div>
+      可以用 window.setInterval(), window.setTimeout(), 和window.requestAnimationFrame()来设定定期执行一个指定函数。
+      <br>
+      setInterval(function, delay) <br>
+      当设定好间隔时间后，function会定期执行。
+      <hr>
+
+      setTimeout(function, delay) <br>
+      在设定好的时间之后执行函数
+      <hr>
+      requestAnimationFrame(callback) <br>
+      告诉浏览器你希望执行一个动画，并在重绘之前，请求浏览器执行一个特定的函数来更新动画。
+    </div>
+    <p class="noteTwo">
+      如果你并不需要与用户互动，你可以使用setInterval()方法，它就可以定期执行指定代码。如果我们需要做一个游戏，我们可以使用键盘或者鼠标事件配合上setTimeout()方法来实现。通过设置事件监听，我们可以捕捉用户的交互，并执行相应的动作。
+    </p>
+    <div class="note">
+      let ctx2 = new CanvasCtx('#canvas2').ctx; <br>
+      function test() { <br>
+      <div style="padding:0 1em ">
+        ctx2.clearRect(0, 0, 1024, 198); <br>
+        let x2 = 400 - 1024; <br>
+        setInterval(function () { <br>
+        <div style="padding:0 1em ">
+          if (x2 >= 400) { <br>
+          <div style="padding:0 1em ">x2 = 400 - 1024; <br></div>
+          } <br>
+          if (x2 > 0) { <br>
+          <div style="padding:0 1em ">ctx2.drawImage(img, x2 - 1024 + 1, 0, 1024, 198); <br></div>
+          } <br>
+          ctx2.drawImage(img, x2, 0, 1024, 198); <br>
+          x2 += 1; <br>
+        </div>
+        }, speed); <br>
+      </div>
+      } <br>
+    </div>
+  </div>
+  <div class="contentWrap fr">
+    <h2 class="highContent">循环全景照片</h2>
+    <div id="canvas" style="width: 800px;height: 200px;border: 1px solid #000;">
+
+    </div>
+    <div id="canvas2" class="wrap_400">
+
+    </div>
+  </div>
+</main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+
+  let img = new Image();
+
+  // User Variables - customize these to change the image
+  // being scrolled, its
+  // direction, and the speed.
+  // 图片本身就是一个全景图片
+  img.src = './../img/Capitan_Meadows,_Yosemite_National_Park.jpg';
+  let CanvasXSize = 800;
+  let CanvasYSize = 200;
+  let speed = 5; //lower is faster
+  let scale = 1.85;
+  let y = -4.5; //vertical offset
+
+  // main
+  let dx = 1;
+  let imgW, imgH, clearX, clearY, ctx;
+  let x = 0; // 绘制图片的起点，只要一直改变起点，就会有全景效果
+
+  img.onload = function () {
+    imgW = img.width * scale;
+    imgH = img.height * scale;
+
+    // image larger than canvas
+    if (imgW > CanvasXSize) {
+      x = CanvasXSize - imgW;
+    }
+
+    // 清理画布的区域要足够大的区域
+    // 但是clearRect(0,0,clearX,clearY)是从0,0开始的，感觉没有必要
+    // 直接使用clearRect(0,0,800,200)不是也行么？？
+    // image larger than canvas
+    if (imgW > CanvasXSize) {
+      clearX = imgW;
+    } else {
+      clearX = CanvasXSize;
+    }
+
+    // image larger than canvas
+    if (imgH > CanvasYSize) {
+      clearY = imgH;
+    } else {
+      clearY = CanvasYSize;
+    }
+
+    // Get Canvas Element
+    ctx = new CanvasCtx('#canvas').ctx;
+
+    test();
+    // Set Refresh Rate
+    setInterval(draw, speed);
+    // return setInterval(draw, speed);
+  };
+
+  function draw() {
+    // Clear Canvas
+    ctx.clearRect(0, 0, clearX, clearY);
+    // ctx.clearRect(0, 0, 800, 200);
+
+    // If image is <= Canvas Size
+    if (imgW <= CanvasXSize) {
+      // reset, start from beginning
+      if (x > CanvasXSize) {
+        x = 0;
+      }
+      // draw aditional image
+      if (x > (CanvasXSize - imgW)) {
+        ctx.drawImage(img, x - CanvasXSize + 1, y, imgW, imgH)
+      }
+    }
+    // If image is > Canvas Size
+    else {
+      // reset, start from beginning
+      if (x > CanvasXSize) {
+        x = CanvasXSize - imgW;
+      }
+      // draw aditional image
+      if (x > (CanvasXSize - imgW)) {
+        ctx.drawImage(img, x - imgW + 1, y, imgW, imgH)
+      }
+    }
+    // draw image
+    ctx.drawImage(img, x, y, imgW, imgH);
+    // amount to move
+    x += dx;
+  }
+
+  /**
+   * 测试代码
+   * 1024 图片宽度
+   * 198 图片高度
+   * x2 图片初始化的位置 图片向左移动的位置
+   */
+  let ctx2 = new CanvasCtx('#canvas2').ctx;
+
+  function test() {
+    ctx2.clearRect(0, 0, 1024, 198);
+    let x2 = 400 - 1024;
+    setInterval(function () {
+      if (x2 >= 400) {
+        x2 = 400 - 1024;
+      }
+      if (x2 > 0) {
+        // x2 增加到0的时候，需要多渲染一张图片，限界图片的左侧
+        ctx2.drawImage(img, x2 - 1024 + 1, 0, 1024, 198);
+      }
+      ctx2.drawImage(img, x2, 0, 1024, 198);
+      x2 += 1;
+    }, speed);
+  }
+</script>

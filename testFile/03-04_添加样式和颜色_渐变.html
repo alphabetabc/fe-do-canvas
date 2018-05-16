@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+
+<body>
+  <div class="section">
+    createLinearGradient(x1, y1, x2, y2)
+    <br> createLinearGradient 方法接受 4 个参数，表示渐变的起点 (x1,y1) 与终点 (x2,y2)。
+    <hr> createRadialGradient(x1, y1, r1, x2, y2, r2)
+    <br> createRadialGradient 方法接受 6 个参数，前三个定义一个以 (x1,y1) 为原点，半径为 r1 的圆，后三个参数则定义另一个以 (x2,y2) 为原点，半径为 r2 的圆。
+    <div class="noteTwo">
+      var lineargradient = ctx.createLinearGradient(0,0,150,150);
+      <br>var radialgradient = ctx.createRadialGradient(75,75,0,75,75,100);
+    </div>
+    <hr> gradient.addColorStop(position, color)
+    <br>addColorStop 方法接受 2 个参数，position 参数必须是一个 0.0 与 1.0 之间的数值，
+    <br> 表示渐变中颜色所在的相对位置。
+    <br> 例如，0.5 表示颜色会出现在正中间。color 参数必须是一个有效的 CSS 颜色值（如 #FFF， rgba(0,0,0,1)，等等）。
+    <div class="noteTwo">
+      var lineargradient = ctx.createLinearGradient(0,0,150,150);
+      <br> lineargradient.addColorStop(0,'white');
+      <br> lineargradient.addColorStop(1,'black');
+    </div>
+    <div class="note">
+      <ol>
+        <li>第一个例子的渐变是从上至下的，注意定义的起终点</li>
+      </ol>
+    </div>
+  </div>
+  <div class="wrap_200 fl" id="canvas">
+
+  </div>
+  <div class="wrap_200 fl" id="canvas2">
+
+  </div>
+
+</body>
+
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  function lineargradient() {
+    let ctx = new CanvasCtx('#canvas').ctx;
+
+    // create gradients
+    let lingrad = ctx.createLinearGradient(0, 0, 0, 150);
+    lingrad.addColorStop(0, '#00ABEB');
+    lingrad.addColorStop(0.5, '#fff');
+    lingrad.addColorStop(0.5, '#26c000');
+    lingrad.addColorStop(1, '#fff');
+
+    let lingrad2 = ctx.createLinearGradient(0, 50, 0, 95);
+    lingrad2.addColorStop(0.5, '#000');
+    lingrad2.addColorStop(1, 'rgba(0,0,0,0)');
+
+    // assign gradients to fill and stroke styles
+    ctx.fillStyle = lingrad;
+    ctx.strokeStyle = lingrad2;
+
+    // draw shapes
+    ctx.fillRect(10, 10, 130, 130);
+    ctx.strokeRect(50, 50, 50, 50);
+  }
+  lineargradient();
+
+  function radialgradient() {
+    let ctx = new CanvasCtx('#canvas2').ctx;
+
+    let radgrad = ctx.createRadialGradient(45, 45, 10, 52, 50, 30);
+    radgrad.addColorStop(0, '#A7D30C');
+    radgrad.addColorStop(0.9, '#019F62');
+    radgrad.addColorStop(1, 'rgba(1,159,98,0)');
+
+    ctx.fillStyle = radgrad;
+    ctx.fillRect(0, 0, 150, 150);
+
+    let radgrad2 = ctx.createRadialGradient(105, 105, 20, 112, 120, 50);
+    radgrad2.addColorStop(0, '#ff5f98');
+    radgrad2.addColorStop(0.75, '#ff0188');
+    radgrad2.addColorStop(1, 'rgba(255,1,136,0)');
+
+    ctx.fillStyle = radgrad2;
+    ctx.fillRect(0, 0, 150, 150);
+
+    let radgrad3 = ctx.createRadialGradient(95, 15, 15, 102, 20, 40);
+    radgrad3.addColorStop(0, '#00c9ff');
+    radgrad3.addColorStop(.8, '#00b5e2');
+    radgrad3.addColorStop(1, 'rgba(0,200,255,0)');
+
+    ctx.fillStyle = radgrad3;
+    ctx.fillRect(0, 0, 150, 150);
+
+    let radgrad4 = ctx.createRadialGradient(0, 150, 50, 0, 140, 90);
+    radgrad4.addColorStop(0, '#F4F201');
+    radgrad4.addColorStop(.8, '#e4c700');
+    radgrad4.addColorStop(1, 'rgba(288,199,0,0)');
+
+    ctx.fillStyle = radgrad4;
+    ctx.fillRect(0, 0, 150, 150);
+  }
+  radialgradient();
+
+</script>

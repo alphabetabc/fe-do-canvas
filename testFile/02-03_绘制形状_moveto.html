@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>绘制形状-path</title>
+  <style>
+    .wrap {
+      width: 1000px;
+      /*height: 800px;*/
+      border: 1px solid #000;
+      margin: 20px auto;
+      padding: 10px;
+    }
+    .note{
+      background: #fff3d4;
+      border-color: #f6b73c;
+      padding-left: 30px;
+      box-sizing: border-box;
+      max-width: 42rem;
+      overflow: hidden;
+      margin-bottom: 20px;
+      /*padding: 10px;*/
+      clear: none;
+      font-size: 1.125rem;
+      border-left-width: 5px;
+      border-left-style: solid;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <h4>
+    绘制path ----- 一定点
+  </h4>
+  <ul>
+    <li>
+      moveTo(x, y)
+      将笔触移动到指定的坐标x以及y上。
+    </li>
+  </ul>
+
+  <div class="note">
+    <strong>
+      当canvas初始化或者beginPath()调用后，你通常会使用moveTo()函数设置起点。
+    </strong>
+  </div>
+
+  <canvas id="canvas" width="150" height="150"></canvas>
+
+</div>
+
+</body>
+</html>
+<script>
+  function smileFace(){
+    let canvas = document.getElementById('canvas');
+
+    if(canvas.getContext){
+      let ctx = canvas.getContext('2d');
+
+      ctx.beginPath();
+      ctx.arc(75,75,50,0,Math.PI*2,true); // 绘制
+      ctx.moveTo(110,75);
+      ctx.arc(75,75,35,0,Math.PI,false);   // 口(顺时针)
+      ctx.moveTo(65,65);
+      ctx.arc(60,65,5,0,Math.PI*2,true);  // 左眼
+      ctx.moveTo(95,65);
+      ctx.arc(90,65,5,0,Math.PI*2,true);  // 右眼
+      ctx.stroke();
+    }
+  }
+
+  smileFace();
+
+</script>

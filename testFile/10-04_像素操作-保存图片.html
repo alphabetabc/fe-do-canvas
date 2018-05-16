@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+<main class="clearFix">
+  <div class="contentWrap fl">
+    <p>
+      HTMLCanvasElement  提供一个toDataURL()方法，此方法在保存图片的时候非常有用。它返回一个包含被类型参数规定的图像表现格式的数据链接。返回的图片分辨率是96dpi。
+    </p>
+    <p class="noteTwo">
+      canvas.toDataURL('image/png') <br>
+      默认设定。创建一个PNG图片。
+    </p>
+    <p class="noteTwo">
+      canvas.toDataURL('image/jpeg', quality) <br>
+      创建一个JPG图片。你可以有选择地提供从0到1的品质量，1表示最好品质，0基本不被辨析但有比较小的文件大小。
+    </p>
+
+    <p class="noteTwo">
+      canvas.toBlob(callback, type, encoderOptions) <br>
+      这个创建了一个在画布中的代表图片的Blob对像。
+    </p>
+
+
+  </div>
+  <div class="contentWrap fr">
+    <p class="highContent">保存图片</p>
+    <div id="canvas" class="wrap_400">
+
+    </div>
+    <div class="wrap_400">
+      <img id="pngImg">
+      <img src="" id="jpgImg">
+    </div>
+  </div>
+</main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+
+  let img = new Image();
+  img.src = './../img/rhino.png';
+  img.onload = function () {
+    draw();
+  };
+
+  function draw() {
+
+    let ctx = new CanvasCtx('#canvas').ctx;
+    let canvas = ctx.canvas;
+
+    ctx.drawImage(img, 0, 0);
+    img.style.display = 'none';
+
+    select('#pngImg').src = canvas.toDataURL();
+
+    select('#jpgImg').src = canvas.toDataURL('image/jpeg',1)
+  }
+
+
+</script>

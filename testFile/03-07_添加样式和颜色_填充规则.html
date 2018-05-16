@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+
+<body>
+<div class="section">
+  <p>
+    当我们用到 fill（或者 clip和isPointinPath ）你可以选择一个填充规则，
+    <br>该填充规则根据某处在路径的外面或者里面来决定该处是否被填充，
+    <br>这对于自己与自己路径相交或者路径被嵌套的时候是有用的。
+  </p>
+  <p>
+    两个可能的值：
+  </p>
+  <ul>
+    <li>
+      "nonzero": non-zero winding rule, 默认值.
+    </li>
+    <li>
+      "evenodd":  even-odd winding rule.
+    </li>
+  </ul>
+</div>
+<div class="wrap_200 fl" id="canvas">
+
+</div>
+<div class="wrap_200 fl" id="canvas2">
+
+</div>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+
+
+  function draw(selector,type) {
+    let ctx = new CanvasCtx(selector).ctx;
+    ctx.beginPath();
+    ctx.arc(100,100,60,0,Math.PI*2,true);
+    ctx.arc(100,100,30,0,Math.PI*2,true);
+    ctx.fill(type);
+  }
+
+  draw('#canvas','nonzero');
+  draw('#canvas2','evenodd');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

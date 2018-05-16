@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+<div class="section">
+  <p>
+    引入图像到canvas里需要以下两步基本操作：
+  </p>
+  <ol>
+    <li>获得一个指向HTMLImageElement的对象或者另一个canvas元素的引用作为源，也可以通过提供一个URL的方式来使用图片（参见例子）</li>
+    <li>使用drawImage()函数将图片绘制到画布上</li>
+  </ol>
+</div>
+<div class="section">
+  HTMLImageElement <br>
+  这些图片是由Image()函数构造出来的，或者任何的 < img> 元素
+  <hr>
+  HTMLVideoElement <br>
+  用一个HTML的 < video>元素作为你的图片源，可以从视频中抓取当前帧作为一个图像
+  <hr>
+  HTMLCanvasElement <br>
+  可以使用另一个 < canvas> 元素作为你的图片源。
+  <hr>
+  ImageBitmap <br>
+  这是一个高性能的位图，可以低延迟地绘制，它可以从上述的所有源以及其它几种源中生成。<br>
+  <hr>
+
+  <div>
+    <span class="highContent">
+      使用相同页面内的图片
+    </span>
+    <p>
+      我们可以通过下列方法的一种来获得与canvas相同页面内的图片的引用：
+      <br>
+      document.images集合
+      document.getElementsByTagName()方法
+      如果你知道你想使用的指定图片的ID，你可以用document.getElementById()获得这个图片
+    </p>
+  </div>
+
+  <div>
+    <span class="highContent">
+      使用其它域名下的图片
+    </span>
+    <p>
+      在 HTMLImageElement上使用crossOrigin属性，你可以请求加载其它域名上的图片。
+      <br>
+      如果图片的服务器允许跨域访问这个图片，那么你可以使用这个图片而不污染canvas，否则，使用这个图片将会污染canvas。
+    </p>
+  </div>
+
+  <div>
+    <span class="highContent">
+      使用其它 canvas 元素
+    </span>
+    <p>
+      和引用页面内的图片类似地，用 document.getElementsByTagName 或 document.getElementById 方法来获取其它 canvas 元素。但你引入的应该是已经准备好的 canvas。
+      <br>
+      一个常用的应用就是将第二个canvas作为另一个大的 canvas 的缩略图。
+    </p>
+  </div>
+</div>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+
+</script>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>绘制形状-path</title>
+  <style>
+    .wrap {
+      width: 1000px;
+      /*height: 800px;*/
+      border: 1px solid #000;
+      margin: 20px auto;
+      padding: 10px;
+    }
+
+    .note {
+      background: #fff3d4;
+      border-color: #f6b73c;
+      padding-left: 30px;
+      box-sizing: border-box;
+      max-width: 42rem;
+      overflow: hidden;
+      margin-bottom: 20px;
+      /*padding: 10px;*/
+      clear: none;
+      font-size: 1.125rem;
+      border-left-width: 5px;
+      border-left-style: solid;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <h4>
+    绘制path --- arc
+  </h4>
+  <ul>
+    <li>
+      arc(x, y, radius, startAngle, endAngle, anticlockwise)
+      画一个以（x,y）为圆心的以radius为半径的圆弧（圆），
+      从startAngle开始到endAngle结束，
+      按照anticlockwise给定的方向（默认为顺时针）来生成。
+      <cite>
+        参数anticlockwise为一个布尔值。为true时，是逆时针方向，否则顺时针方向。
+      </cite>
+    </li>
+    <li>
+      arcTo(x1, y1, x2, y2, radius)
+      根据给定的控制点和半径画一段圆弧，再以直线连接两个控制点。
+    </li>
+  </ul>
+
+  <div class="note">
+    <strong>
+      arc()函数中的角度单位是弧度，不是度数。
+      角度与弧度的js表达式:radians=(Math.PI/180)*degrees。
+    </strong>
+  </div>
+
+  <canvas id="canvas" width="150" height="200"></canvas>
+
+</div>
+
+</body>
+</html>
+<script>
+  function arc() {
+    let canvas = document.getElementById('canvas');
+
+    if (canvas.getContext) {
+      let ctx = canvas.getContext('2d');
+
+      for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 3; j++) {
+          ctx.beginPath();
+          let x = 25 + j * 50; // x 坐标值
+          let y = 25 + i * 50; // y 坐标值
+          let radius = 20; // 圆弧半径
+          let startAngle = 0; // 开始点
+          let endAngle = Math.PI + (Math.PI * j) / 2; // 结束点
+          let anticlockwise = i % 2 === 0 ? false : true; // 顺时针或逆时针
+
+          ctx.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+
+          if (i > 1) {
+            ctx.fill();
+          } else {
+            ctx.stroke();
+          }
+        }
+      }
+    }
+  }
+
+  arc();
+
+</script>

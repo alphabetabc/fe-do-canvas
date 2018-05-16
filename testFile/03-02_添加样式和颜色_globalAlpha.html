@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+
+<body>
+  <div class="note">
+    globalAlpha = transparencyValue
+    <br> 这个属性影响到 canvas 里所有图形的透明度，有效的值范围是 0.0 （完全透明）到 1.0（完全不透明），默认是 1.0。
+  </div>
+
+  <div class="noteTwo">
+    圆叠加得越更多，原先所画的圆的透明度会越低。通过增加循环次数，画更多的圆，背景图的中心部分会完全消失
+  </div>
+  <div class="wrap_200 fl" id="canvas" style="background: #000;">
+
+  </div>
+
+  <div class="wrap_200 fl" id="canvas2" style="background:#000">
+
+  </div>
+</body>
+
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  /**
+   * 透明度
+   */
+  function globalAlpha() {
+    let ctx = new CanvasCtx('#canvas').ctx;
+
+    ctx.fillStyle = '#fd0';
+    ctx.fillRect(0, 0, 75, 75);
+
+    ctx.fillStyle = '#6c0';
+    ctx.fillRect(75, 0, 75, 75);
+
+    ctx.fillStyle = '#09f';
+    ctx.fillRect(0, 75, 75, 75);
+
+    ctx.fillStyle = '#f30';
+    ctx.fillRect(75, 75, 75, 75);
+
+    ctx.fillStyle = '#fff';
+
+    // 设置透明色
+    ctx.globalAlpha = 0.2;
+
+    for (let i = 0; i < 7; i++) {
+      ctx.beginPath();
+      ctx.arc(75, 75, 10 + 10 * i, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  globalAlpha();
+
+  function globalAlphaTwo() {
+    let ctx = new CanvasCtx('#canvas2').ctx;
+
+    // 画背景
+    ctx.fillStyle = 'rgb(255,221,0)';
+    ctx.fillRect(0, 0, 150, 37.5);
+
+    ctx.fillStyle = 'rgb(102,204,0)';
+    ctx.fillRect(0, 37.5, 150, 37.5);
+
+    ctx.fillStyle = 'rgb(0,153,255)';
+    ctx.fillRect(0, 75, 150, 37.5);
+
+    ctx.fillStyle = 'rgb(255,51,0)';
+    ctx.fillRect(0, 112.5, 150, 37);
+
+    // 画半透明矩形
+    // for (var i = 0; i < 10; i++) {
+    //     ctx.fillStyle = 'rgba(255,255,255,' + (i + 1) / 10 + ')';
+    //     for (var j = 0; j < 4; j++) {
+    //       ctx.fillRect(5 + i * 14, 5 + j * 37.5, 14, 27.5)
+    //     }
+    // }
+
+    for (let i = 0; i < 10; i++) {
+      ctx.fillStyle = `rgba(255,255,255,${(i + 1) / 10})`;
+      // console.log(`rgba(255,255,255,${(i + 1) / 10})`);
+      for (let j = 0; j < 4; j++) {
+        ctx.fillRect(5 + i * 14, 5 + j * 37.5, 14, 27.5);
+      }
+    }
+  }
+  globalAlphaTwo();
+
+
+  console.log(1)
+</script>

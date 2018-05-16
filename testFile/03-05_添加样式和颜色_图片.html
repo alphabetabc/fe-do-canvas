@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+
+<body>
+<div class="section">
+  createPattern(image, type)
+  <br>该方法接受两个参数。Image 可以是一个 Image 对象的引用，或者另一个 canvas 对象。
+  <br>Type 必须是下面的字符串值之一：repeat，repeat-x，repeat-y 和 no-repeat。
+  <hr>
+  <div class="noteTwo">
+    var img = new Image();
+    <br>
+    img.src = 'someimage.png';
+    <br>
+    var ptrn = ctx.createPattern(img,'repeat');
+  </div>
+</div>
+<div class="wrap_400 fl" id="canvas">
+
+</div>
+</body>
+
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+
+  function createPattern() {
+    let ctx = new CanvasCtx('#canvas').ctx;
+
+    let img = new Image();
+    img.src = './../img/dog.png';
+    img.onload = function () {
+
+      // 创建图案
+      let ptrn = ctx.createPattern(img, 'repeat');
+      ctx.fillStyle = ptrn;
+      ctx.fillRect(0, 0, 400, 400);
+    }
+  }
+
+  createPattern();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

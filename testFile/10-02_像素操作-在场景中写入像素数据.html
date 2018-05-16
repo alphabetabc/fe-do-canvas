@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+<main class="clearFix">
+  <div class="contentWrap fl">
+    <p>
+      用putImageData()方法去对场景进行像素数据的写入。
+      <span class="noteTwo">
+        ctx.putImageData(myImageData, dx, dy); <br>
+        dx和dy参数表示你希望在场景内左上角绘制的像素数据所得到的设备坐标。
+      </span>
+      <span class="noteTwo">
+        // onload很重要 <br>
+        img.onload = function() { <br>
+          ctx.draw(image,0,0) <br>
+        }
+      </span>
+    </p>
+
+
+  </div>
+  <div class="contentWrap fr">
+    <p class="highContent">图片灰度和反相颜色</p>
+    <p>
+      <input id="grayscalebtn" value="Grayscale" type="button">
+      <input id="invertbtn" value="Invert" type="button">
+      <input id="reset" value="reset" type="button">
+    </p>
+    <div id="canvas" class="wrap_400">
+
+    </div>
+    <button id="btn">ffff</button>
+  </div>
+</main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+
+  let img = new Image();
+  img.src = './../img/rhino.png';
+  img.onload = function () {
+    draw(this);
+    test();
+  };
+
+  function draw(img) {
+    let ctx = new CanvasCtx('#canvas').ctx;
+    let canvas = ctx.canvas;
+
+    ctx.drawImage(img, 0, 0, 400, 400);
+    img.style.display = 'none';
+
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let data = imageData.data; // uint8ClampedArray 类型化数组
+
+    console.log('before----', imageData);
+    console.log('before----', data);
+
+    let invert = () => {
+      for (let i = 0; i < data.length; i += 4) {
+        data[i] = 255 - data[i]; // r
+        data[i + 1] = 255 - data[i + 1];  // g
+        data[i + 2] = 255 - data[i + 2];  // b
+      }
+      console.log('invert----', imageData);
+      ctx.putImageData(imageData, 0, 0);
+    };
+
+    let grayscale = () => {
+      for (let i = 0; i < data.length; i += 4) {
+        let avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+        data[i] = avg; // r
+        data[i + 1] = avg; //g
+        data[i + 2] = avg; //b
+      }
+      console.log('grayscale ----', imageData);
+      ctx.putImageData(imageData, 0, 0);
+    };
+
+    let reset = () => {
+      // console.log('reset-----',oData);
+      ctx.putImageData(imageData, 0, 0);
+    };
+
+    let inverbtn = select('#invertbtn');
+    inverbtn.addEventListener('click', invert);
+
+    let grayscalebbtn = select('#grayscalebtn');
+    grayscalebbtn.addEventListener('click', grayscale);
+
+    select('#reset').addEventListener('click',reset);
+
+  }
+
+  function test() {
+    let obj = {
+      a: 1,
+      b: 2
+    };
+
+    let a = obj.a;
+
+    select('#btn').addEventListener('click', function () {
+      a = 1111;
+      console.log(obj)
+    });
+  }
+
+
+</script>

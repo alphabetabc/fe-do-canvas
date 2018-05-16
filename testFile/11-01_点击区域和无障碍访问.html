@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+  <main class="clearFix">
+    <div class="contentWrap fl">
+      这块都是一些实验的api，没有细看
+    </div>
+    <div class="contentWrap fr">
+      <div id="canvas" class="wrap_200">
+
+      </div>
+    </div>
+    <canvas>
+      <h2>Shapes</h2>
+      <p>A rectangle with a black border.
+        In the background is a pink circle.
+        Partially overlaying the <a href="http://en.wikipedia.org/wiki/Circle" onfocus="drawCircle();" onblur="drawPicture();">circle</a>.
+        Partially overlaying the circle is a green
+        <a href="http://en.wikipedia.org/wiki/Square" onfocus="drawSquare();" onblur="drawPicture();">square</a>
+        and a purple <a href="http://en.wikipedia.org/wiki/Triangle" onfocus="drawTriangle();" onblur="drawPicture();">triangle</a>,
+        both of which are semi-opaque, so the full circle can be seen underneath.</p>
+    </canvas>
+  </main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  let ctx = new CanvasCtx('#canvas').ctx;
+
+  console.log(ctx);
+</script>

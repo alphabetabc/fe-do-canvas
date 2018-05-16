@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+
+<main class="clearFix">
+  <div class="contentWrap fl">
+    <h1>Path2D 对象</h1>
+    <p>
+      为了简化代码和提高性能，Path2D对象已可以在较新版本的浏览器中使用，
+      用来缓存或记录绘画命令，这样你将能快速地回顾路径。
+    </p>
+    <p>
+      Path2D()
+      Path2D()会返回一个新初始化的Path2D对象（可能将某一个路径作为变量——创建一个它的副本，
+      或者将一个包含SVG path数据的字符串作为变量）。
+      <span class="noteTwo">
+        new Path2D();     // 空的Path对象 <br>
+        new Path2D(path); // 克隆Path对象 <br>
+        new Path2D(d);    // 从SVG建立Path对象 <br>
+      </span>
+    </p>
+    <p>
+      Path2D.addPath(path [, transform])​ <br>
+      添加了一条路径到当前路径（可能添加了一个变换矩阵）。
+    </p>
+    <hr>
+    <h3>使用 SVG 路径</h3>
+    <p>
+      使用 SVG path data 创建一个 Path2D 路径。路径将会移动到点 (M10 10) ，
+      然后向右侧水平移动80个点 (h 80)，然后向下80个点 (v 80)，然后向左80个点(h -80)，
+      最后回到起始点(z)。 <br>
+      <span>M50 50 h 80 v 80 h -80 Z</span>
+    </p>
+  </div>
+  <div class="contentWrap fr">
+    <div id="canvas" class="wrap_200">
+
+    </div>
+    <div id="canvas2" class="wrap_200">
+
+    </div>
+    <div id="canvas3" class="wrap_200">
+
+    </div>
+  </div>
+</main>
+
+</body>
+</html>
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  function testPath2D() {
+    let ctx = new CanvasCtx('#canvas').ctx;
+
+    // 用来缓存或记录绘画命令
+    let rectangle = new Path2D();
+    rectangle.rect(10, 10, 50, 50);
+
+    let circle = new Path2D();
+    circle.moveTo(125, 35);
+    circle.arc(100, 35, 25, 0, Math.PI * 2, true);
+
+    // console.log('rect', rectangle);
+    // console.log('circle', circle);
+
+    ctx.stroke(rectangle);
+    ctx.fill(circle);
+  }
+
+  testPath2D();
+
+  // 缓存示例2  这个例子更能说明是缓存或者记录绘画命令
+  function test2() {
+    let ctx = new CanvasCtx('#canvas2').ctx;
+
+    let path1 = new Path2D();
+    path1.rect(10, 10, 30, 30);
+
+    let path2 = new Path2D(path1);
+    path2.moveTo(150, 100);
+    path2.arc(100, 100, 50, 0, Math.PI * 2, true);
+
+    ctx.stroke(path2); // path2中记录两段path命令
+  }
+  test2();
+
+  // 使用svg中path数据
+  function useSvgPath() {
+    let ctx = new CanvasCtx('#canvas3').ctx;
+    let path = new Path2D('M50 50 h 80 v 80 h -80 Z');
+    ctx.fill(path);
+  }
+  useSvgPath();
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+<main class="clearFix">
+  <div class="contentWrap fl">
+    <p>
+      可以直接通过ImageData对象操纵像素数据，直接读取或将数据数组写入该对象中。
+    </p>
+    <div>
+      ImageData对象中存储着canvas对象真实的像素数据，它包含以下几个只读属性： <br>
+      width <br>
+      图片宽度，单位是像素 <br><br>
+      height <br>
+      图片高度，单位是像素 <br><br>
+      data <br>
+      Uint8ClampedArray类型的一维数组，包含着RGBA格式的整型数据，范围在0至255之间（包括255）。 <br>
+    </div>
+    <hr>
+    <div>
+      <h1>创建一个ImageData对象</h1>
+      <p>去创建一个新的，空白的ImageData对象，你应该会使用createImageData() 方法。</p>
+      <p class="noteTwo">
+        var myImageData = ctx.createImageData(width, height); <br>
+        创建了一个新的具体特定尺寸的ImageData对象。所有像素被预设为透明黑。
+      </p>
+      <p>
+        也可以创建一个被anotherImageData对象指定的相同像素的ImageData对象。
+        这个新的对象像素全部被预设为透明黑。这个并非复制了图片数据。
+      </p>
+      <p class="noteTwo">
+        var myImageData = ctx.createImageData(anotherImageData);
+      </p>
+    </div>
+    <hr>
+    <div>
+      <h1>得到场景像素数据</h1>
+      <p class="noteTwo">
+        var myImageData = ctx.getImageData(left, top, width, height); <br>
+        这个方法会返回一个ImageData对象，它代表了画布区域的对象数据，
+        此画布的四个角落分别表示为(left, top), (left + width, top),
+        (left, top + height), 以及(left + width, top + height)四个点。这些坐标点被设定为画布坐标空间元素。
+      </p>
+    </div>
+  </div>
+  <div class="contentWrap fr">
+    <h2>拾色器</h2>
+    <div style="width: 100px;height: 100px;background: #f6b73c" id="color">
+      #f6b73c
+    </div>
+    <div id="canvas" class="wrap_200">
+
+    </div>
+  </div>
+</main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+
+  let img = new Image();
+  img.src = './../img/Capitan_Meadows,_Yosemite_National_Park.jpg';
+
+  let ctx = new CanvasCtx('#canvas').ctx;
+
+  img.onload = function () {
+    ctx.drawImage(img, 0, 0);
+    img.style.display = 'none';
+  };
+
+  let color = document.getElementById('color');
+
+  function pick(e) {
+    let x = e.layerX;
+    let y = e.layerY;
+    let pixel = ctx.getImageData(x, y, 1, 1);
+    let data = pixel.data;
+    let rgba = `rgba(${data[0]},${data[1]},${data[2]},${data[3]/255})`;
+    console.log('pixel 对象 -- ',pixel);
+    color.style.background = rgba;
+    color.textContent = rgba;
+  }
+
+  ctx.canvas.addEventListener('click',pick);
+
+  // let myImageData = ctx.createImageData(100,100);
+  // console.log(myImageData)
+
+
+  {
+    const xCoord = 50;
+    const yCoord = 100;
+    const canvasWidth = 1024;
+
+    const getColorIndicesForCoord = (x, y, width) => {
+      const red = y * (width * 4) + x * 4;
+      return [red, red + 1, red + 2, red + 3];
+    };
+
+    const colorIndices = getColorIndicesForCoord(xCoord, yCoord, canvasWidth);
+
+    const [redIndex, greenIndex, blueIndex, alphaIndex] = colorIndices;
+
+    console.log(redIndex, greenIndex, blueIndex, alphaIndex)
+  }
+</script>

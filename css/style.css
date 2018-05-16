@@ -1,0 +1,156 @@
+html{
+  font-size: 16px;
+}
+/*  清浮动 */
+.clearFix:after {
+  content: "\200B";
+  display: block;
+  height: 0;
+  clear: both;
+}
+
+.clearFix {
+  *zoom: 1;
+}
+
+/* 浮动 */
+.fl {
+  display: block;
+  float: left;
+}
+
+.fr {
+  display: block;
+  float: right;
+}
+
+/*main容器*/
+main,.main{
+  min-width: 1000px;
+  min-height: 200px;
+  display: block;
+}
+
+/*content容器*/
+.contentWrap{
+  width: 50%;
+  box-sizing: border-box;
+  padding: 5px;
+  /*border: 1px solid #000;*/
+}
+.contentWrap_40{
+  width: 40%;
+  box-sizing: border-box;
+  padding: 5px;
+  /*border: 1px solid #000;*/
+}
+.contentWrap_60{
+  width: 60%;
+  box-sizing: border-box;
+  padding: 5px;
+  /*border: 1px solid #000;*/
+}
+
+/*200*200的容器*/
+.wrap_200 {
+  width: 200px;
+  height: 200px;
+  border: 1px solid #000;
+  margin: 20px;
+  /*padding: 10px;*/
+}
+
+/*400*400的容器*/
+.wrap_400 {
+  width: 400px;
+  height: 400px;
+  border: 1px solid #000;
+  margin: 20px;
+  /*padding: 10px;*/
+}
+
+/*600*300的容器*/
+.wrap_600_300 {
+  width: 600px;
+  height: 300px;
+  border: 1px solid #000;
+  margin: 20px;
+  /*padding: 10px;*/
+}
+
+/*高亮内容*/
+.highContent{
+  background-color: #333;
+  color: #fff;
+  font-weight: 400;
+  line-height: 1.25;
+  padding: 4px;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+
+/*section*/
+section,
+.section {
+  max-width: 42rem;
+  overflow: hidden;
+  padding: 10px;
+  border: 1px solid #000;
+  margin: 10px;
+}
+
+/*note 黄色边框*/
+.note {
+  background: #fff3d4;
+  border-color: #f6b73c;
+  padding-left: 30px;
+  box-sizing: border-box;
+  max-width: 42rem;
+  overflow: hidden;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  /*padding: 10px;*/
+  clear: none;
+  font-size: 1.125rem;
+  border-left-width: 5px;
+  border-left-style: solid;
+  display: block;
+}
+/*note 灰色边框*/
+.noteTwo {
+  font-size: 16px;
+  background: #eee;
+  border: 0 solid #3f87a6;
+  color: #333;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 15px;
+  max-width: 42rem;
+  font-family: consolas, monaco, "Andale Mono", monospace;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+  overflow: auto;
+  direction: ltr !important;
+  text-align: left !important;
+  border-left-width: 5px !important;
+  -moz-tab-size: 4;
+  tab-size: 4;
+  -moz-hyphens: none;
+  -webkit-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+  display: block;
+}
+
+/*code*/
+.code,code {
+  background-color: rgba(220, 220, 220, .5);
+  border-radius: 2px;
+  box-decoration-break: clone;
+  font-family: consolas, "Liberation Mono", courier, monospace;
+  padding: 2px;
+  word-wrap: break-word;
+  display: block;
+  line-height: 1.5em;
+}

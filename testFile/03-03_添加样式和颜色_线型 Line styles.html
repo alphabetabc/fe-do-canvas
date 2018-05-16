@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+
+<body>
+  <div class="section">
+    lineWidth = value
+    <br>设置线条宽度。
+    <hr>
+    <br> lineCap = type ====> { butt，round 和 square。默认是 butt。}
+    <br>设置线条末端样式。
+    <hr>
+    <br> lineJoin = type ====> { round, bevel 和 miter。默认是 miter。}
+    <br>设定线条与线条间接合处的样式。
+    <hr>
+    <br> miterLimit = value
+    <br>限制当两条线相交时交接处最大长度；所谓交接处长度（斜接长度）是指线条交接处内角顶点到外角顶点的长度。
+    <hr>
+    <br> getLineDash()
+    <br>返回一个包含当前虚线样式，长度为非负偶数的数组。
+    <hr>
+    <br> setLineDash(segments)
+    <br>设置当前虚线样式。
+    <hr>
+    <br> lineDashOffset = value
+    <br>设置虚线样式的起始偏移量。
+    <hr>
+  </div>
+  <div class="wrap_200 fl" id="canvas">
+
+  </div>
+  <div class="wrap_200 fl" id="canvas2">
+
+  </div>
+  <div class="wrap_200 fl" id="canvas3">
+
+  </div>
+
+  <div class="wrap_200 fl" id="canvas4">
+
+  </div>
+  <div class="wrap_200 fl" id="canvas5">
+
+  </div>
+
+
+</body>
+
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  function lineWidth() {
+    let ctx = new CanvasCtx('#canvas').ctx;
+    for (let i = 0; i < 10; i++) {
+      ctx.lineWidth = 1 + i;
+      ctx.beginPath();
+      ctx.moveTo(5 + i * 14, 5);
+      ctx.lineTo(5 + i * 14, 144);
+      ctx.stroke();
+    }
+  }
+  lineWidth();
+
+  function lineCap() {
+    let ctx = new CanvasCtx('#canvas2').ctx;
+    let lineCap = ['butt', 'round', 'square'];
+
+    // 创建路径
+    ctx.strokeStyle = '#09f';
+    ctx.beginPath();
+    ctx.moveTo(10, 10);
+    ctx.lineTo(140, 10);
+    ctx.moveTo(10, 140);
+    ctx.lineTo(140, 140);
+    ctx.stroke();
+
+    // 画线条
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 15;
+    for (let i = 0; i < lineCap.length; i++) {
+      ctx.lineCap = lineCap[i];
+      ctx.beginPath();
+      ctx.moveTo(25 + i * 50, 10);
+      ctx.lineTo(25 + i * 50, 140);
+      ctx.stroke();
+    }
+  }
+  lineCap();
+
+  function lineJoin() {
+    let ctx = new CanvasCtx('#canvas3').ctx;
+    let lineJoin = ['round', 'bevel', 'miter'];
+
+    ctx.lineWidth = 15;
+    for (let i = 0; i < lineJoin.length; i++) {
+      ctx.lineJoin = lineJoin[i];
+      ctx.beginPath();
+      ctx.moveTo(10, 15 + i * 40);
+      ctx.lineTo(35, 55 + i * 40);
+      ctx.lineTo(75, 15 + i * 40);
+      ctx.lineTo(115, 55 + i * 40);
+      ctx.lineTo(155, 15 + i * 40);
+      ctx.stroke();
+    }
+  }
+  lineJoin();
+
+  function miterLimit() {
+    let ctx = new CanvasCtx('#canvas4').ctx;
+
+    ctx.strokeStyle = '#09f';
+    ctx.beginPath();
+    ctx.moveTo(0, 50);
+    ctx.lineTo(180, 50);
+    ctx.moveTo(0, 140);
+    ctx.lineTo(180, 140);
+    ctx.stroke();
+
+    ctx.lineWidth = 10;
+    ctx.lineJoin = 'miter'
+    ctx.strokeStyle = '#000';
+    ctx.beginPath();
+    ctx.moveTo(0, 140);
+    for (let i = 0; i < 20; i++) {
+      ctx.miterLimit = 10;
+      ctx.lineTo(5 + i * 10, i % 2 === 0 ? 50 : 140);
+      ctx.stroke();
+    }
+  }
+  miterLimit();
+
+  {
+    let ctx = new CanvasCtx('#canvas5').ctx;
+    let offset = 0;
+
+    function draw() {
+      ctx.clearRect(0, 0, 200, 200);
+      ctx.setLineDash([4, 2]);
+      ctx.lineDashOffset = -offset;
+      ctx.strokeRect(10, 10, 100, 100);
+    }
+
+    function march() {
+      offset++;
+      if (offset > 16) {
+        offset = 0;
+      }
+      draw();
+      setTimeout(march, 20);
+    }
+    march();
+  }
+
+</script>

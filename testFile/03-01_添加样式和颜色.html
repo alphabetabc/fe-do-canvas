@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+<p>
+  fillStyle = color
+  设置图形的填充颜色。
+  <br>
+  strokeStyle = color
+  设置图形轮廓的颜色。
+</p>
+<div class="note">
+  注意: 一旦您设置了 strokeStyle 或者 fillStyle 的值，那么这个新值就会成为新绘制的图形的默认值。如果你要给每个图形上不同的颜色，你需要重新设置 fillStyle 或 strokeStyle 的值。
+</div>
+
+<div class="wrap_200 fl" id="canvas">
+
+</div>
+
+<div class="wrap_200 fl" id="canvas2">
+
+</div>
+
+<div id="test" class="wrap">
+
+</div>
+</body>
+</html>
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  function fillStyle() {
+    let ctx = new CanvasCtx('#canvas').ctx;
+    for (let i = 0; i < 6; i++) {
+      for (let j = 0; j < 6; j++) {
+        ctx.fillStyle = `rgb(${Math.floor(255 - 42.5 * i)},${Math.floor(255 - 42.5 * j)},0)`;
+        ctx.fillRect(i * 25, j * 25, 25, 25);
+      }
+    }
+  }
+  fillStyle();
+
+  function fillStroke() {
+    let ctx = new CanvasCtx('#canvas2').ctx;
+    for (let i = 0; i < 6; i++) {
+      for (let j = 0; j < 6; j++) {
+        ctx.strokeStyle = `rgb(0,${Math.floor(255 - 42.5 * i)},${Math.floor(255 - 42.5 * j)})`;
+        ctx.beginPath();
+        ctx.arc(12.5+i*25,12.5+j*25,10,0,Math.PI*2,true);
+        ctx.stroke();
+      }
+    }
+  }
+  fillStroke();
+
+
+
+
+</script>

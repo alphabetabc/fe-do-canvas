@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+<main class="clearFix">
+  <div class="contentWrap fl">
+    drawImage(image, x, y) <br>
+    其中 image 是 image 或者 canvas 对象，x 和 y 是其在目标 canvas 里的起始坐标。
+    <br>
+    <hr>
+    drawImage(image, x, y, width, height) <br>
+    这个方法多了2个参数：width 和 height，这两个参数用来控制 当向canvas画入时应该缩放的大小
+    <hr>
+    drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) <br>
+    第一个参数和其它的是相同的，都是一个图像或者另一个 canvas 的引用。
+    其它8个参数最好是参照右边的图解，前4个是定义图像源的切片位置和大小，后4个则是定义切片的目标显示位置和大小。
+    <br>
+    <img src="./../img/Canvas_drawimage.jpg" alt="Canvas_drawimage">
+    <ul>
+      <li>image : 图片源</li>
+      <li>裁切的起点 ：sx 、 sy</li>
+      <li>裁切的宽高 ：sWidth 、 sHeight</li>
+      <li>在相框中的相对位置 ： dx 、dy</li>
+      <li>在相框中的大小 ： dWidth、dHeight</li>
+    </ul>
+  </div>
+  <div class="contentWrap fr">
+    <div id="canvas" class="wrap_200">
+
+    </div>
+    <div id="canvas2" class="wrap_200">
+
+    </div>
+    <div id="canvas3" class="wrap_200">
+      <img src="./../img/dog.png" alt="dog" style="display: none" id="source">
+      <img src="./../img/frame.png" alt="frame" style="display: none" id="frame">
+    </div>
+  </div>
+</main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  /*---- 绘制图片------*/
+  function drawImage() {
+    let ctx = new CanvasCtx('#canvas').ctx;
+    let img = new Image();
+    img.onload = function () {
+      ctx.drawImage(img, 0, 0);
+      ctx.beginPath();
+      ctx.moveTo(30, 96);
+      ctx.lineTo(70, 66);
+      ctx.lineTo(103, 76);
+      ctx.lineTo(170, 15);
+      ctx.stroke();
+    };
+
+    img.src='./../img/background.png'
+  }
+  drawImage();
+
+  /*---- 绘制图片增加两个参数 width 、 height*/
+  function drawImage2() {
+    let ctx = new CanvasCtx('#canvas2').ctx;
+    let img = new Image();
+    img.onload = function () {
+      for(let i=0;i<4;i++){
+        for(let j=0;j<4;j++){
+          ctx.drawImage(img,i*50,j*50,50,50);
+        }
+      }
+    };
+    img.src = './../img/dog.png'
+  }
+  drawImage2();
+
+  /*--- 绘制图片 切片 ---- */
+  function slicing() {
+    let ctx = new CanvasCtx('#canvas3').ctx;
+
+    let source = document.getElementById('source');
+    let frame = document.getElementById('frame');
+
+    // 绘制frame
+    ctx.drawImage(frame,0,0,200,200);
+
+    // 绘制裁切的图片
+    ctx.drawImage(source,30,10,150,150,25,20,150,160)
+  }
+  slicing();
+
+</script>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+<main class="clearFix">
+  <div class="contentWrap fl">
+    裁切路径和普通的 canvas 图形差不多，不同的是它的作用是遮罩，用来隐藏不需要的部分。
+    红边五角星就是裁切路径，所有在路径以外的部分都不会在 canvas 上绘制出来。
+    <br>
+    <img src="./../img/Canvas_clipping_path.png" alt="Canvas_clipping_path">
+    <p class="noteTwo">
+      如果和上面介绍的 globalCompositeOperation 属性作一比较，它可以实现与 source-in 和 source-atop 差不多的效果。最重要的区别是裁切路径不会在 canvas
+      上绘制东西，而且它永远不受新图形的影响。这些特性使得它在特定区域里绘制图形时相当好用。
+    </p>
+    <p>
+      clip() <br>
+      Turns the path currently being built into the current clipping path.
+    </p>
+  </div>
+  <div class="contentWrap fr">
+    <div id="canvas" class="wrap_200">
+
+    </div>
+
+    <div id="canvas2" class="wrap_200">
+
+    </div>
+  </div>
+</main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  !function draw() {
+    let ctx = new CanvasCtx('#canvas').ctx;
+    ctx.fillRect(0, 0, 150, 150);
+    ctx.translate(75, 75);
+
+    // create a circular clipping path 圆形裁剪区域
+    ctx.beginPath();
+    ctx.arc(0, 0, 60, 0, Math.PI * 2, true);
+    ctx.clip();
+
+    // draw background
+    let lingrad = ctx.createLinearGradient(0, -75, 0, 75);
+    lingrad.addColorStop(0, '#232256');
+    lingrad.addColorStop(1, '#143778');
+
+    ctx.fillStyle = lingrad;
+    ctx.fillRect(-75, -75, 150, 150);
+
+    // draw stars
+    for (let j = 1; j < 50; j++) {
+      ctx.save();
+      ctx.fillStyle = '#fff';
+      ctx.translate(75 - Math.floor(Math.random() * 150), 75 - Math.floor(Math.random() * 150));
+      drawStar(ctx, Math.floor(Math.random() * 4) + 2);
+      ctx.restore();
+    }
+  }();
+
+  /**
+   * 五角星
+   * @param ctx 笔触
+   * @param r 半径
+   */
+  function drawStar(ctx, r) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(r, 0);
+    for (let i = 0; i < 9; i++) {
+      ctx.rotate(Math.PI / 5);
+      if (i % 2 === 0) {
+        ctx.lineTo((r / 0.525731) * 0.200811, 0);
+      } else {
+        ctx.lineTo(r, 0);
+      }
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  {
+    /**
+     * 正弦定理算边长
+     * a/sinA = b/sinB =c/sinC = 2r=D（r为外接圆半径，D为直径）。
+     */
+    let ctx2 = new CanvasCtx('#canvas2').ctx;
+    let r = 50;
+    let rad = (a) => a*Math.PI/180;
+    ctx2.strokeStyle = '#f00';
+    ctx2.lineWidth = 2;
+    ctx2.translate(75,75);
+    ctx2.save();
+    ctx2.beginPath();
+    ctx2.moveTo(r, 0);
+    for (let i = 0; i < 9; i++) {
+      ctx2.rotate(Math.PI / 5);
+      if (i % 2 === 0) {
+        ctx2.lineTo((r / Math.sin(rad(126))) * Math.sin(rad(18)), 0);
+        // ctx2.lineTo(r*0.5, 0);
+      } else {
+        ctx2.lineTo(r, 0);
+      }
+    }
+    ctx2.closePath();
+    ctx2.stroke();
+
+    // console.log(Math.sin(rad(18))/Math.sin(rad(126)))
+  }
+
+</script>
+
+
+
+
+
+
+

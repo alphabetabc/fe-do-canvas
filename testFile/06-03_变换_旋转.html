@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+<main class="clearFix">
+  <div class="contentWrap fl">
+    rotate(angle) <br>
+    这个方法只接受一个参数：旋转的角度(angle)，它是顺时针方向的，以弧度为单位的值。 <br>
+    旋转的中心点始终是 canvas 的原点，如果要改变它，我们需要用到 translate 方法。<br>
+    <img src="./../img/Canvas_grid_rotate.png" alt="Canvas_grid_rotate">
+    <hr>
+
+  </div>
+  <div class="contentWrap fr">
+    <div id="canvas" class="wrap_200">
+
+    </div>
+
+  </div>
+</main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  // 第一层循环决定环的数量
+  // 第二层循环决定每环有多少个点。
+  // 每次旋转的夹角就是 360/6 = 60 度。
+  // 往外每一环的圆点数目是里面一环的 2 倍，那么每次旋转的夹角随之减半。
+  !function rotate() {
+    let ctx = new CanvasCtx('#canvas').ctx;
+    ctx.translate(100, 100);
+
+    for (let i = 1; i < 6; i++) {
+      ctx.save();
+      ctx.fillStyle = `rgba(${51 * i},${255 - 51 * i},255)`;
+
+      for (let j = 0; j < 6 * i; j++) {
+        ctx.rotate(2 * Math.PI / (6 * i)); // 只要循环，就相对于之前的位置持续旋转
+        ctx.beginPath();
+        ctx.arc(0, i * 12.5, 5, 0, Math.PI * 2, true);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+  }();
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+

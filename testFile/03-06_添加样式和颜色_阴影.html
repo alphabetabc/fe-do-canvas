@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+
+<body>
+<div class="section">
+  shadowOffsetX = float
+  <br>
+  shadowOffsetY = float
+  <br>
+  shadowOffsetX 和 shadowOffsetY 用来设定阴影在 X 和 Y 轴的延伸距离，它们是不受变换矩阵所影响的。负值表示阴影会往上或左延伸，正值则表示会往下或右延伸，它们默认都为 0。
+  <hr>
+  shadowBlur = float<br>
+  shadowBlur 用于设定阴影的模糊程度，其数值并不跟像素数量挂钩，也不受变换矩阵的影响，默认为 0
+  <hr>
+  shadowColor = color <br>
+  shadowColor 是标准的 CSS 颜色值，用于设定阴影颜色效果，默认是全透明的黑色。 <br>
+</div>
+<div class="wrap_400" id="canvas">
+
+</div>
+</body>
+
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  function shadow() {
+    let ctx = new CanvasCtx('#canvas').ctx;
+
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 2;
+    ctx.shadowBlur = 2;
+    ctx.shadowColor = 'rgba(0,0,0,0.5)';
+
+    ctx.font = '40px Times New Roman';
+    ctx.fillStyle = '#000';
+    ctx.fillText('Canvas是画布',15,60);
+  }
+  shadow();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

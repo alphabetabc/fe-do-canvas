@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+<main class="clearFix">
+  <div class="contentWrap_40 fl">
+    <p class="noteTwo">
+      对运动有更深的了解
+    </p>
+    <p class="noteTwo">
+      添加一些符合物理的运动
+    </p>
+  </div>
+  <div class="contentWrap_60 fr">
+    <h2 class="highContent">绘制小球-添加影子</h2>
+    <p>
+      <code>// ctx.clearRect(0, 0, canvas.width, canvas.height); </code><br>
+      <p>用一个半透明的 fillRect 函数取代之，就可轻松制作长尾效果</p>
+      <code>
+        ctx.fillStyle = 'rgba(255,255,255,0.3)'; <br>
+        ctx.fillRect(0,0,canvas.width,canvas.height); <br>
+      </code>
+    </p>
+    <div id="canvas" class="wrap_600_300">
+
+    </div>
+  </div>
+</main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  let ctx = new CanvasCtx('#canvas').ctx;
+  let canvas = ctx.canvas;
+
+  let ball = {
+    x: 100,
+    y: 100,
+    radius: 25,
+    vx: 5,
+    vy: 2,
+    color: '#00f',
+    draw: function () {
+      ctx.beginPath();
+      ctx.fillStyle = this.color;
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+      ctx.closePath();
+      ctx.fill();
+    }
+  };
+
+  ball.draw();
+
+  let requestAnimationFrameCount = null;
+
+  function draw() {
+    // ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    ball.draw();
+    ball.x += ball.vx;
+    ball.y += ball.vy;
+    ball.vy*= 0.95;
+    ball.vy+= 0.25;
+    // 边际检查
+    if (ball.x + ball.vx > canvas.width - ball.radius || ball.x + ball.vx < ball.radius) {
+      ball.vx = -ball.vx;
+    }
+    if (ball.y + ball.vy > canvas.height -ball.radius|| ball.x + ball.vy < ball.radius) {
+      ball.vy = -ball.vy;
+    }
+    // console.log(ball.x,ball.y)
+
+    requestAnimationFrameCount = window.requestAnimationFrame(draw);
+  }
+
+  canvas.addEventListener('mouseover', function (e) {
+    requestAnimationFrameCount = window.requestAnimationFrame(draw);
+  });
+  canvas.addEventListener('mouseout', function (e) {
+    window.cancelAnimationFrame(requestAnimationFrameCount);
+  });
+
+
+</script>

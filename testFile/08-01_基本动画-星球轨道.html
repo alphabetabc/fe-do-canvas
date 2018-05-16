@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+<main class="clearFix">
+  <div class="contentWrap fl">
+    <p>重绘是相当费时的，而且性能很依赖于电脑的速度。</p>
+    <h2>
+      动画的基本步骤
+    </h2>
+    <ol>
+      <li>
+        清空 canvas
+        <p>
+          除非接下来要画的内容会完全充满 canvas （例如背景图），否则你需要清空所有。最简单的做法就是用 clearRect 方法。
+        </p>
+      </li>
+      <li>
+        保存 canvas 状态
+        <p>
+          如果你要改变一些会改变 canvas 状态的设置（样式，变形之类的），又要在每画一帧之时都是原始状态的话，你需要先保存一下。
+        </p>
+      </li>
+      <li>
+        绘制动画图形（animated shapes）
+        <p>这一步才是重绘动画帧。</p>
+      </li>
+      <li>
+        恢复 canvas 状态
+        <p>如果已经保存了 canvas 的状态，可以先恢复它，然后重绘下一帧。</p>
+      </li>
+    </ol>
+
+    <h2 class="highContent">
+      有安排的更新画布 Scheduled updates
+    </h2>
+    <div>
+      可以用 window.setInterval(), window.setTimeout(), 和window.requestAnimationFrame()来设定定期执行一个指定函数。
+      <br>
+      setInterval(function, delay) <br>
+      当设定好间隔时间后，function会定期执行。
+      <hr>
+
+      setTimeout(function, delay) <br>
+      在设定好的时间之后执行函数
+      <hr>
+      requestAnimationFrame(callback) <br>
+      告诉浏览器你希望执行一个动画，并在重绘之前，请求浏览器执行一个特定的函数来更新动画。
+    </div>
+    <p class="noteTwo">
+      如果你并不需要与用户互动，你可以使用setInterval()方法，它就可以定期执行指定代码。如果我们需要做一个游戏，我们可以使用键盘或者鼠标事件配合上setTimeout()方法来实现。通过设置事件监听，我们可以捕捉用户的交互，并执行相应的动作。
+    </p>
+  </div>
+  <div class="contentWrap fr">
+    <div id="canvas" class="wrap_400">
+
+    </div>
+  </div>
+</main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  let sun = new Image();
+  let moon = new Image();
+  let earth = new Image();
+  let sourceSrc = './../img/';
+
+  function init() {
+    sun.src = sourceSrc + 'Canvas_sun.png';
+    moon.src = sourceSrc + 'Canvas_moon.png';
+    earth.src = sourceSrc + 'Canvas_earth.png';
+    window.requestAnimationFrame(draw);
+  }
+
+  init();
+
+  let ctx = new CanvasCtx('#canvas').ctx;
+
+  function draw() {
+    // 在源图像上方显示目标图像。
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.clearRect(0,0,400,400); // clear canvas
+
+    ctx.fillStyle = 'rgba(0,0,0,0.4)';
+    ctx.strokeStyle = 'rgba(0,153,255,0.4)';
+    ctx.save(); // init
+
+    ctx.translate(200,200);
+
+    // earth
+    let time = new Date();
+    // 这里角度计算的原理不懂
+    ctx.rotate(((2*Math.PI)/60)*time.getSeconds() + ((2*Math.PI)/60000)*time.getMilliseconds());
+    ctx.translate(105,0);
+    ctx.fillRect(0,-12,12,24); // Shadow
+    ctx.drawImage(earth,-12,-12);
+
+    // Moon
+    ctx.save();
+    ctx.rotate( ((2*Math.PI)/6)*time.getSeconds() + ((2*Math.PI)/6000)*time.getMilliseconds() );
+    ctx.translate(0,28.5);
+    ctx.drawImage(moon,-3.5,-3.5);
+    ctx.restore();
+
+    ctx.restore();
+
+    ctx.beginPath();
+    ctx.arc(200,200,105,0,Math.PI*2,false); // Earth orbit
+    ctx.stroke();
+
+    ctx.drawImage(sun,0,0,400,400);
+
+    window.requestAnimationFrame(draw);
+  }
+</script>

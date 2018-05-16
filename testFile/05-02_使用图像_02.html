@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+  <main class="clearFix">
+    <div class="contentWrap fl">
+      <div>
+        <span class="highContent">
+        由零开始创建图像
+      </span>
+        <br>
+        <code>
+          var img = new Image();   // 创建一个< img>元素
+          <br>
+          img.src = 'myImage.png'; // 设置图片源地址
+        </code>
+
+        <P>
+          用load事件来保证不会在加载完毕之前使用这个图片:
+          <code>
+            var img = new Image();   // 创建img元素 <br>
+            img.onload = function(){ <br>
+            // 执行drawImage语句 <br>
+            } <br>
+            img.src = 'myImage.png'; // 设置图片源地址 <br>
+          </code>
+        </P>
+      </div>
+      <div>
+        <span class="highContent">
+          通过 data: url 方式嵌入图像
+        </span>
+        <code>
+          img.src = 'data:image/gif;base64,R0lGODlhCwALAIAAAAAA3pn/
+          ZiH5BAEAAAEALAAAAAALAAsAAAIUhA+hkcuO4lmNVindo7qyrIXiGBYAOw==';
+        </code>
+      </div>
+    </div>
+    <div class="contentWrap fr">
+      <div id="canvas" class="wrap_200">
+
+      </div>
+    </div>
+  </main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  let ctx = new CanvasCtx('#canvas').ctx;
+</script>

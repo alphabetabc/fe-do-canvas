@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>绘制形状-path</title>
+  <style>
+    .wrap {
+      width: 1000px;
+      /*height: 800px;*/
+      border: 1px solid #000;
+      margin: 20px auto;
+      padding: 10px;
+    }
+    .note{
+      background: #fff3d4;
+      border-color: #f6b73c;
+      padding-left: 30px;
+      box-sizing: border-box;
+      max-width: 42rem;
+      overflow: hidden;
+      margin-bottom: 20px;
+      /*padding: 10px;*/
+      clear: none;
+      font-size: 1.125rem;
+      border-left-width: 5px;
+      border-left-style: solid;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <h4>
+    绘制path ---- 线
+  </h4>
+  <ul>
+    <li>
+      lineTo(x, y)
+      绘制一条从当前位置到指定x以及y位置的直线。
+    </li>
+  </ul>
+
+  <div class="note">
+    <strong>
+      一个是填充的，另一个是描边的
+    </strong>
+  </div>
+
+  <canvas id="canvas" width="150" height="150"></canvas>
+
+</div>
+
+</body>
+</html>
+<script>
+  function triangleTwo(){
+    let canvas = document.getElementById('canvas');
+
+    if(canvas.getContext){
+      let ctx = canvas.getContext('2d');
+
+      //填充的三角形
+      ctx.beginPath();
+      ctx.moveTo(10,10);
+      ctx.lineTo(10,80);
+      ctx.lineTo(80,10);
+      ctx.fill();
+
+      //描边
+      ctx.beginPath();
+      ctx.moveTo(140,140);
+      ctx.lineTo(140,60);
+      ctx.lineTo(60,140);
+      ctx.closePath(); // 调用stroke不会自动闭合
+      ctx.stroke();
+
+    }
+  }
+
+  triangleTwo();
+
+</script>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+<main class="clearFix">
+  <div class="contentWrap fl">
+    <p>
+      用它来增减图形在 canvas 中的像素数目，对形状，位图进行缩小或者放大。
+    </p>
+    scale(x, y) <br>
+    scale 方法接受两个参数。x,y 分别是横轴和纵轴的缩放因子，它们都必须是正值。 <br>
+    值比 1.0 小表示缩小，比 1.0 大则表示放大，值为 1.0 时什么效果都没有。 <br>
+
+    <div class="note">
+      默认情况下，canvas 的 1 单位就是 1 个像素。举例说，如果我们设置缩放因子是 0.5，1 个单位就变成对应 0.5 个像素，这样绘制出来的形状就会是原先的一半。同理，设置为 2.0 时，1 个单位就对应变成了 2
+      像素，绘制的结果就是图形放大了 2 倍;
+      <hr>
+      <cite>
+        如果不进行restore，之后画图的比例尺依然是0.5，即代码中绘制1像素，实际只是绘制了0.5像素，这和svg是不一样的
+      </cite>
+      <p>
+        缩放过程中线宽也会有变化
+      </p>
+    </div>
+
+  </div>
+  <div class="contentWrap fr">
+    <div id="canvas" class="wrap_400">
+
+    </div>
+
+  </div>
+</main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+
+  !function draw() {
+    let ctx = new CanvasCtx('#canvas').ctx;
+
+    // 初始化黑色背景
+    ctx.strokeStyle = '#fc0';
+    ctx.lineWidth = 1.5;
+    ctx.fillRect(0, 0, 400, 400);
+
+    // Uniform scaling
+    ctx.save();
+    ctx.translate(50, 50);
+    drawSpirograph(ctx, 22, 6, 5); // no scaling
+
+    ctx.translate(100, 0);
+    ctx.scale(0.75, 0.75);
+    drawSpirograph(ctx, 22, 6, 5);
+
+    /** --------------------------------
+     * 1）当前的缩放比例是0.75，比例尺1像素 = 0.75像素
+     * 2）如果下一个图案要向右平移100像素，就需要translate(100/0.75,0)
+     -----------------------------------*/
+    ctx.translate(133.333, 0);
+    ctx.scale(0.75, 0.75);
+    drawSpirograph(ctx, 22, 6, 5);
+    ctx.restore();
+
+
+    // Non-uniform scaling (y direction)
+    ctx.strokeStyle = '#0cf';
+    ctx.save();
+    ctx.translate(50, 150);
+    ctx.scale(1, 0.75);  // y 方向缩放
+    drawSpirograph(ctx,22,6,5);
+
+    ctx.translate(100,0);
+    ctx.scale(1,0.75); // y 方向再次缩放
+    drawSpirograph(ctx,22,6,5);
+
+    ctx.translate(100,0);
+    ctx.scale(1,0.75);
+    drawSpirograph(ctx,22,6,5);
+    ctx.restore();
+
+    // Non-uniform scaling (x direction)
+    ctx.strokeStyle = '#cf0';
+    ctx.save();
+    ctx.translate(50,250);
+    ctx.scale(0.75,1);
+    drawSpirograph(ctx,22,6,5);
+
+    ctx.translate(133.333,0); // 100/0.75
+    ctx.scale(0.75,1);
+    drawSpirograph(ctx,22,6,5);
+
+    ctx.translate(177.777,0);  // 100 / (0.75*2)
+    ctx.scale(0.75,1);
+    drawSpirograph(ctx,22,6,5);
+  }();
+
+  // 绘制螺旋形状的方法
+  function drawSpirograph(ctx, R, r, O) {
+    let x1 = R - O;
+    let y1 = 0;
+    let i = 1;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    let x2, y2;
+    do {
+      if (i > 20000) break;
+      x2 = (R + r) * Math.cos(i * Math.PI / 72) - (r + O) * Math.cos(((R + r) / r) * (i * Math.PI / 72));
+      y2 = (R + r) * Math.sin(i * Math.PI / 72) - (r + O) * Math.sin(((R + r) / r) * (i * Math.PI / 72));
+      ctx.lineTo(x2, y2);
+      x1 = x2;
+      y1 = y2;
+      i++;
+    } while (x2 !== R - O && y2 !== 0);
+    ctx.stroke();
+  }
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+

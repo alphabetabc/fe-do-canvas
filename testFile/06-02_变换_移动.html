@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+<main class="clearFix">
+  <div class="contentWrap fl">
+    translate(x, y) <br>
+    translate 方法接受两个参数。x 是左右偏移量，y 是上下偏移量，如图所示。<br>
+    <img src="./../img/Canvas_grid_translate.png" alt="Canvas_grid_translate">
+    <hr>
+    <cite>
+      在做变形之前先保存状态是一个良好的习惯。
+      <br>大多数情况下，调用 restore 方法比手动恢复原先的状态要简单得多。
+      <br>又，如果你是在一个循环中做位移但没有保存和恢复 canvas 的状态，
+      <br>很可能到最后会发现怎么有些东西不见了，
+      <br>那是因为它很可能已经超出 canvas 范围以外了
+    </cite>
+
+  </div>
+  <div class="contentWrap fr">
+    <div id="canvas" class="wrap_400">
+
+    </div>
+    <div id="canvas2" class="wrap_400">
+
+    </div>
+
+    <div id="canvas3" class="wrap_400">
+
+    </div>
+  </div>
+</main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  !function test() {
+    let ctx = new CanvasCtx('#canvas').ctx;
+    // 初始化背景
+    ctx.fillRect(0, 0, 400, 400);
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        ctx.save();
+        ctx.fillStyle = '#fff';
+        ctx.translate(50 + j * 100, 50 + i * 100);
+        ctx.fillText(`${i}-${j}`, 0, 0);
+        ctx.restore();
+      }
+    }
+
+  }();
+
+
+  !function draw() {
+    let ctx = new CanvasCtx('#canvas2').ctx;
+
+    ctx.fillRect(0, 0, 400, 400);
+
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        ctx.save();
+        ctx.strokeStyle = '#9cff00';
+        ctx.translate(50 + j * 100, 50 + i * 100);
+        drawSpirograph(ctx, 20 * (j + 2) / (j + 1), -8 * (i + 3) / (i + 1), 10);
+        ctx.restore();
+      }
+    }
+  }();
+
+  // 绘制螺旋形状的方法
+  function drawSpirograph(ctx, R, r, O) {
+    let x1 = R - O;
+    let y1 = 0;
+    let i = 1;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    let x2,y2;
+    do{
+      if (i>20000) break;
+      x2 = (R+r)*Math.cos(i*Math.PI/72) - (r+O)*Math.cos(((R+r)/r)*(i*Math.PI/72));
+      y2 = (R+r)*Math.sin(i*Math.PI/72) - (r+O)*Math.sin(((R+r)/r)*(i*Math.PI/72));
+      ctx.lineTo(x2,y2);
+      x1 = x2;
+      y1 = y2;
+      i++;
+    }while(x2 !== R-O && y2 !== 0);
+    ctx.stroke();
+  }
+
+
+</script>

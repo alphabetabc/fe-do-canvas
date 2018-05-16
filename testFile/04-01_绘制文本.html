@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+<div class="section">
+  fillText(text, x, y [, maxWidth])<br>
+  在指定的(x,y)位置填充指定的文本，绘制的最大宽度是可选的.
+  strokeText(text, x, y [, maxWidth]) <br>
+  在指定的(x,y)位置绘制文本边框，绘制的最大宽度是可选的.
+</div>
+<div class="wrap_400 fl" id="canvas">
+
+</div>
+<div class="wrap_400 fl" id="canvas2">
+
+</div>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  function fillText() {
+    let ctx = new CanvasCtx('#canvas').ctx;
+    ctx.font = '48px bold serif';
+    ctx.fillText('hello,world',0,48)
+  }
+  fillText();
+
+  function strokeText() {
+    let ctx = new CanvasCtx('#canvas2').ctx;
+    ctx.font = '48px bold serif';
+    ctx.strokeStyle = '#f00';
+    ctx.lineWidth = '4';
+    ctx.strokeText('hello,world',0,48)
+  }
+  strokeText();
+</script>

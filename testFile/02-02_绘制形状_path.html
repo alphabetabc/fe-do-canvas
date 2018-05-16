@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>绘制形状-path</title>
+  <style>
+    .wrap {
+      width: 1000px;
+      /*height: 800px;*/
+      border: 1px solid #000;
+      margin: 20px auto;
+      padding: 10px;
+    }
+    .note{
+      background: #fff3d4;
+      border-color: #f6b73c;
+      padding-left: 30px;
+      box-sizing: border-box;
+      max-width: 42rem;
+      overflow: hidden;
+      margin-bottom: 20px;
+      /*padding: 10px;*/
+      clear: none;
+      font-size: 1.125rem;
+      border-left-width: 5px;
+      border-left-style: solid;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <h4>
+    绘制path
+  </h4>
+  <ul>
+    <li>
+      beginPath() <br>
+      新建一条路径，生成之后，图形绘制命令被指向到路径上生成路径。
+    </li>
+    <li>
+      closePath() <br>
+      闭合路径之后图形绘制命令又重新指向到上下文中。
+    </li>
+    <li>
+      stroke() <br>
+      通过线条来绘制图形轮廓。
+    </li>
+    <li>
+      fill() <br>
+      通过填充路径的内容区域生成实心的图形。
+    </li>
+  </ul>
+
+  <div class="note">
+    <strong>
+      注意：
+      当前路径为空，即调用beginPath()之后，或者canvas刚建的时候，
+      第一条路径构造命令通常被视为是moveTo（），无论最后的是什么。
+      出于这个原因，你几乎总是要在设置路径之后专门指定你的起始位置。
+    </strong>
+  </div>
+
+  <div class="note">
+    <strong>
+      注意：
+      当你调用fill()函数时，所有没有闭合的形状都会自动闭合，
+      所以你不需要调用closePath()函数。但是调用stroke()时不会自动闭合。
+    </strong>
+  </div>
+
+  <canvas id="canvas" width="150" height="150"></canvas>
+
+</div>
+
+</body>
+</html>
+<script>
+  function triangle(){
+    let canvas = document.getElementById('canvas');
+
+    if(canvas.getContext){
+      let ctx = canvas.getContext('2d');
+
+      ctx.beginPath();
+      ctx.moveTo(75,50);
+      ctx.lineTo(100,74);
+      ctx.lineTo(100,25);
+      ctx.fill();
+    }
+  }
+
+  triangle();
+
+</script>

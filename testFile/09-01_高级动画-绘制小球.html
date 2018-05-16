@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+  <main class="clearFix">
+    <div class="contentWrap_40 fl">
+      <p class="noteTwo">
+        对运动有更深的了解
+      </p>
+      <p class="noteTwo">
+        添加一些符合物理的运动
+      </p>
+    </div>
+    <div class="contentWrap_60 fr">
+      <h2 class="highContent">绘制小球</h2>
+      <div id="canvas" class="wrap_600_300">
+
+      </div>
+    </div>
+  </main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  let ctx = new CanvasCtx('#canvas').ctx;
+  let canvas = ctx.canvas;
+
+  let ball = {
+    x:100,
+    y:100,
+    radius:25,
+    color:'#00f',
+    draw:function () {
+      ctx.beginPath();
+      ctx.fillStyle = this.color;
+      ctx.arc(this.x,this.y,this.radius,0,Math.PI*2,true);
+      ctx.closePath();
+      ctx.fill();
+    }
+  };
+
+  ball.draw();
+</script>

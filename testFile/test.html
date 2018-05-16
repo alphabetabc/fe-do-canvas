@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+  <main class="clearFix">
+    <div class="contentWrap fl">
+
+    </div>
+    <div class="contentWrap fr">
+      <div id="canvas" class="wrap_200">
+
+      </div>
+    </div>
+  </main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  let ctx = new CanvasCtx('#canvas').ctx;
+
+  console.log(ctx);
+</script>

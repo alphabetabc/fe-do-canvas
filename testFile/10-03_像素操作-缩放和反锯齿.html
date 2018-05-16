@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+<main class="clearFix">
+  <div class="contentWrap fl">
+    <p>
+      第二个画布和imageSmoothingEnabled 属性的帮助下， <br>
+      我们可以放大显示我们的图片及看到详情内容。
+    </p>
+
+
+  </div>
+  <div class="contentWrap fr">
+    <p class="highContent">缩放和反锯齿</p>
+    <div id="canvas" class="wrap_400">
+
+    </div>
+    <div id="zoom" style="width: 300px;height: 227px;"></div>
+    <label for="smoothbtn">
+        <input type="checkbox" name="smoothbtn" checked="checked" id="smoothbtn">
+        Enable image smoothing
+    </label>
+  </div>
+</main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+
+  let img = new Image();
+  img.src = './../img/rhino.png';
+  img.onload = function () {
+    draw();
+  };
+
+  function draw() {
+
+    let ctx = new CanvasCtx('#canvas').ctx;
+    let canvas = ctx.canvas;
+
+    ctx.drawImage(img, 0, 0);
+    img.style.display = 'none';
+
+    let zoomCtx = new CanvasCtx('#zoom').ctx;
+
+    let smoothBtn = select('#smoothbtn');
+
+    let toggleSmoothing = function (event) {
+      zoomCtx.imageSmoothingEnabled = this.checked;
+      zoomCtx.mozImageSmoothingEnabled = this.checked;
+      zoomCtx.webkitImageSmoothingEnabled = this.checked;
+      zoomCtx.msImageSmoothingEnabled = this.checked;
+    }
+
+    smoothBtn.addEventListener('change', toggleSmoothing);
+
+    let zoom = function (event) {
+      let x = event.layerX;
+      let y = event.layerY;
+      zoomCtx.drawImage(canvas, Math.abs(x - 5), Math.abs(y - 5),10,10,0,0,200,200)
+    };
+
+    canvas.addEventListener('mousemove',zoom)
+
+  }
+
+
+</script>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>绘制形状</title>
+  <style>
+    .wrap {
+      width: 1000px;
+      /*height: 800px;*/
+      border: 1px solid #000;
+      margin: 20px auto;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <h4>
+    绘制矩形
+  </h4>
+  <ul>
+    <li>
+      fillRect(x, y, width, height)
+      绘制一个填充的矩形
+    </li>
+    <li>
+      strokeRect(x, y, width, height)
+      绘制一个矩形的边框
+    </li>
+    <li>
+      clearRect(x, y, width, height)
+      清除指定矩形区域，让清除部分完全透明。
+    </li>
+  </ul>
+
+  <canvas id="canvas" width="150" height="150"></canvas>
+
+</div>
+
+</body>
+</html>
+<script>
+  function rectangular(){
+    let canvas = document.getElementById('canvas');
+
+    if(canvas.getContext){
+      let ctx = canvas.getContext('2d');
+
+      ctx.fillRect(25,25,100,100); // 绘制一个填充的矩形
+      ctx.clearRect(45,45,60,60); // 绘制一个矩形的边框
+      ctx.strokeRect(50,50,50,50); // 清除指定矩形区域，让清除部分完全透明。
+
+      // fillRect()函数绘制了一个边长为100px的黑色正方形。
+      // clearRect()函数从正方形的中心开始擦除了一个60*60px的正方形，
+      // 接着strokeRect()在清除区域内生成一个50*50的正方形边框。
+    }
+  }
+
+  rectangular();
+
+</script>

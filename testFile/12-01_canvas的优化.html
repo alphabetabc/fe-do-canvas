@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+<main class="clearFix">
+  <div class="contentWrap fl">
+    <p>
+        <span class="highContent">
+          在离屏canvas上预渲染相似的图形或重复的对象
+        </span>
+    </p>
+    <p>
+        <span class="highContent">
+          避免浮点数的坐标点，用整数取而代之
+        </span>
+    </p>
+    <p>
+        <span class="highContent">
+                  不要在用drawImage时缩放图像
+        </span>
+    </p>
+    <p>
+      <span class="highContent">
+         使用多层画布去画一个复杂的场景
+      </span>
+    </p>
+    <p>
+      <span class="highContent">
+        用CSS设置大的背景图
+      </span>
+    </p>
+    <p>
+      <span class="highContent">
+        用CSS设置大的背景图
+      </span>
+    </p>
+    <hr>
+    <ul>
+      <li>将画布的函数调用集合到一起（例如，画一条折线，而不要画多条分开的直线）</li>
+      <li>避免不必要的画布状态改变</li>
+      <li>渲染画布中的不同点，而非整个新状态</li>
+      <li>尽可能避免&nbsp;<a href="/zh-CN/docs/Web/API/CanvasRenderingContext2D/shadowBlur"
+                        title="CanvasRenderingContext2D.shadowBlur 是 Canvas 2D API 描述模糊效果程度的属性；&nbsp;它既不对应像素值也不受当前转换矩阵的影响。&nbsp;默认值是 0。"><code>shadowBlur</code></a>特性
+      </li>
+      <li>尽可能避免<a href="/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_text">text rendering</a></li>
+      <li>使用不同的办法去清除画布(<a href="/zh-CN/docs/Web/API/CanvasRenderingContext2D/clearRect"
+                          title="The CanvasRenderingContext2D.clearRect() 是 Canvas 2D API 设置指定矩形区域内（以 点&nbsp;(x, y)&nbsp;为起点，范围是(width, height)&nbsp;）所有像素变成透明，并擦除之前绘制的所有内容的方法。"><code>clearRect()</code></a>
+        vs. <a href="/zh-CN/docs/Web/API/CanvasRenderingContext2D/fillRect"
+               title="CanvasRenderingContext2D.fillRect()&nbsp;是Canvas 2D API 绘制填充矩形的方法。矩形的起点在&nbsp;(x, y) 位置，矩形的尺寸是&nbsp;width 和&nbsp;height ，fillStyle 属性决定矩形的样式。"><code>fillRect()</code></a>
+        vs. 调整canvas大小)
+      </li>
+      <li>&nbsp;有动画，请使用<a href="/zh-CN/docs/Web/API/Window/requestAnimationFrame"
+                          title="当你准备好更新屏幕画面时你就应用此方法。这会要求你的动画函数在浏览器下次重绘前执行。回调的次数常是每秒60次，但大多数浏览器通常匹配 W3C 所建议的刷新率。如果网页于后台或隐藏在 <iframe> 里面，重绘频率可能会大大降低以提升性能和电池耐久度。"><code>window.requestAnimationFrame()</code></a>
+        而非<a href="/zh-CN/docs/Web/API/Window/setInterval"
+             title="WindowOrWorkerGlobalScope&nbsp;的&nbsp;setInterval()&nbsp;方法重复调用一个函数或执行一个代码段，在每次调用之间具有固定的时间延迟。"><code>window.setInterval()</code></a>
+      </li>
+      <li>请谨慎使用大型物理库</li>
+      <li>用<a href="http://jsperf.com" title="http://jsperf.com" class="external external-icon"
+              rel="noopener">JSPerf</a>测试性能
+      </li>
+    </ul>
+  </div>
+  <div class="contentWrap fr">
+    <div id="canvas" class="wrap_200">
+
+    </div>
+  </div>
+</main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  let ctx = new CanvasCtx('#canvas').ctx;
+
+  console.log(ctx);
+</script>

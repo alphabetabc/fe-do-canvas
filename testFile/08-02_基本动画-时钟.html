@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+<main class="clearFix">
+  <div class="contentWrap fl">
+    <p>重绘是相当费时的，而且性能很依赖于电脑的速度。</p>
+    <h2>
+      动画的基本步骤
+    </h2>
+    <ol>
+      <li>
+        清空 canvas
+        <p>
+          除非接下来要画的内容会完全充满 canvas （例如背景图），否则你需要清空所有。最简单的做法就是用 clearRect 方法。
+        </p>
+      </li>
+      <li>
+        保存 canvas 状态
+        <p>
+          如果你要改变一些会改变 canvas 状态的设置（样式，变形之类的），又要在每画一帧之时都是原始状态的话，你需要先保存一下。
+        </p>
+      </li>
+      <li>
+        绘制动画图形（animated shapes）
+        <p>这一步才是重绘动画帧。</p>
+      </li>
+      <li>
+        恢复 canvas 状态
+        <p>如果已经保存了 canvas 的状态，可以先恢复它，然后重绘下一帧。</p>
+      </li>
+    </ol>
+
+    <h2 class="highContent">
+      有安排的更新画布 Scheduled updates
+    </h2>
+    <div>
+      可以用 window.setInterval(), window.setTimeout(), 和window.requestAnimationFrame()来设定定期执行一个指定函数。
+      <br>
+      setInterval(function, delay) <br>
+      当设定好间隔时间后，function会定期执行。
+      <hr>
+
+      setTimeout(function, delay) <br>
+      在设定好的时间之后执行函数
+      <hr>
+      requestAnimationFrame(callback) <br>
+      告诉浏览器你希望执行一个动画，并在重绘之前，请求浏览器执行一个特定的函数来更新动画。
+    </div>
+    <p class="noteTwo">
+      如果你并不需要与用户互动，你可以使用setInterval()方法，它就可以定期执行指定代码。如果我们需要做一个游戏，我们可以使用键盘或者鼠标事件配合上setTimeout()方法来实现。通过设置事件监听，我们可以捕捉用户的交互，并执行相应的动作。
+    </p>
+    <p class="noteTwo">
+      过程 <br>
+      小时刻度  →   分钟刻度   →    时针   →    分针     →     秒针   →    蓝色大圆盘
+    </p>
+  </div>
+  <div class="contentWrap fr">
+    <div id="canvas" class="wrap_400">
+
+    </div>
+  </div>
+</main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+
+  let ctx = new CanvasCtx('#canvas').ctx;
+  let PI = Math.PI;
+
+  function clock() {
+    let now = new Date();
+    ctx.save(); // 1
+
+    ctx.clearRect(0, 0, 400, 400); // 清理区域
+    ctx.translate(200, 200); // 移动坐标系
+    ctx.scale(1, 1);  // 坐标系缩小
+    ctx.rotate(-PI / 2);
+    ctx.strokeStyle = '#000';
+    ctx.fillStyle = '#fff';
+    ctx.lineWidth = 8;
+    ctx.lineCap = 'round';
+
+    // Hour marks
+    ctx.save();
+    for (let i = 0; i < 12; i++) {
+      ctx.beginPath();
+      ctx.rotate(PI / 6); // 从1点开始画，到12点
+      ctx.moveTo(100, 0);
+      ctx.lineTo(120, 0);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // Minute marks
+    ctx.save();
+    ctx.lineWidth = 5;
+    for (let i = 0; i < 60; i++) {
+      if (i % 5 !== 0) {
+        ctx.beginPath();
+        ctx.moveTo(117, 0);
+        ctx.lineTo(120, 0);
+        ctx.stroke();
+      }
+      ctx.rotate(PI / 30); // i=0的时候不画图，所以此时才旋转
+    }
+    ctx.restore();
+
+    let hour = now.getHours();
+    let minute = now.getMinutes();
+    let sec = now.getSeconds();
+    hour = hour >= 12 ? hour - 12 : hour;
+    ctx.fillStyle = '#000';
+
+    // write Hours
+    ctx.save();
+    ctx.rotate(hour * (PI / 6) + minute * (PI / 360) + sec * (PI / 21600));
+    ctx.lineWidth = 14;
+    ctx.beginPath();
+    ctx.moveTo(-20, 0);
+    ctx.lineTo(80, 0);
+    ctx.stroke();
+    ctx.restore();
+
+    // write Minutes
+    ctx.save();
+    ctx.rotate(minute * (PI / 30) + sec * (PI / 1800));
+    ctx.lineWidth = 10;
+    ctx.beginPath();
+    ctx.moveTo(-28, 0);
+    ctx.lineTo(112, 0);
+    ctx.stroke();
+    ctx.restore();
+
+    // Write seconds
+    ctx.save();
+    ctx.rotate(sec*PI / 30);
+    ctx.strokeStyle = '#D40000';
+    ctx.fillStyle = '#D40000';
+    ctx.lineWidth = 6;
+    ctx.beginPath(); // 表针
+    ctx.moveTo(-30,0);
+    ctx.lineTo(120,0);
+    ctx.stroke();
+    ctx.beginPath(); // 固定表盘的地方
+    ctx.arc(0,0,10,0,2*PI,true);
+    ctx.stroke();
+    ctx.fill();
+    ctx.restore();
+
+    // 绘制表盘
+    ctx.beginPath();
+    ctx.strokeStyle = '#325FA2';
+    ctx.lineWidth = 14;
+    ctx.arc(0,0,142,0,PI*2,true);
+    ctx.stroke();
+
+    ctx.restore(); // 1
+
+    window.requestAnimationFrame(clock);
+  }
+
+  window.requestAnimationFrame(clock);
+</script>
