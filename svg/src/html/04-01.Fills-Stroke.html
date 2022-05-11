@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>svg</title>
+  <link rel="stylesheet" href="./../css/index.css">
+  <style>
+    circle {
+      fill: #f00;
+    }
+  </style>
+  <script src="./../js/vendor/commonjs-simulator.min.js"></script>
+</head>
+<body>
+<h1>填充和描边</h1>
+<div class="layout-wrapper">
+  <div class="layout-item">
+    <h3>上色</h3>
+    <svg>
+      <rect x="10" y="10" width="100" height="100"
+            stroke="blue"
+            stroke-opacity="0.8"
+            fill="purple"
+            fill-opacity="0.5"></rect>
+    </svg>
+  </div>
+</div>
+<div class="layout-wrapper">
+  <div class="layout-item">
+    <h3>stroke-liencap</h3>
+    <p>
+      <br> butt ---- 用直边结束线段;
+      <br> square -- 的效果差不多，但是会稍微超出实际路径的范围，超出的大小由stroke-width控制
+      <br> round --- 表示边框的终点是圆角，圆角的半径也是由stroke-width控制的
+    </p>
+    <svg width="160" height="140" xmlns="http://www.w3.org/2000/svg" version="1.1">
+      <line x1="40" x2="120" y1="20" y2="20"
+            stroke="black"
+            stroke-width="20"
+            stroke-linecap="butt"></line>
+      <line x1="40" x2="120" y1="60" y2="60"
+            stroke="black"
+            stroke-width="20"
+            stroke-linecap="square"></line>
+      <line x1="40" x2="120" y1="100" y2="100"
+            stroke="black"
+            stroke-width="20"
+            stroke-linecap="round"></line>
+    </svg>
+  </div>
+  <div class="layout-item">
+    <h3>stroke-linejoin</h3>
+    <div>
+      <p>
+        <br> miter ------ 是默认值，表示用方形画笔在连接处形成尖角，
+        <br> round ------ 表示用圆角连接
+        <br> bevel ------ 连接处会形成一个斜接
+      </p>
+    </div>
+    <svg width="160" height="280" xmlns="http://www.w3.org/2000/svg" version="1.1">
+      <polyline points="40 60 80 20 120 60" stroke="black" stroke-width="20"
+                stroke-linecap="butt" fill="none" stroke-linejoin="miter"></polyline>
+
+      <polyline points="40 140 80 100 120 140" stroke="black" stroke-width="20"
+                stroke-linecap="round" fill="none" stroke-linejoin="round"></polyline>
+
+      <polyline points="40 220 80 180 120 220" stroke="black" stroke-width="20"
+                stroke-linecap="square" fill="none" stroke-linejoin="bevel"></polyline>
+    </svg>
+  </div>
+</div>
+<div class="layout-wrapper">
+  <div class="layout-item">
+    <h3>stroke-dasharray</h3>
+    <svg width="200" height="150" xmlns="http://www.w3.org/2000/svg" version="1.1">
+      <path d="M 10 75 Q 50 10 100 75 T 190 75"
+            stroke="black"
+            stroke-linecap="round"
+            stroke-dasharray="5,10,5"
+            fill="none"></path>
+      <path d="M 10 75 L 190 75"
+            stroke="red"
+            stroke-linecap="round"
+            stroke-width="1"
+            stroke-dasharray="5,5"
+            fill="none"></path>
+    </svg>
+  </div>
+  <div class="layout-item">
+    <h3>stroke-dashoffset</h3>
+    <svg width="200" height="150" id="strokeDashoffset"></svg>
+  </div>
+</div>
+<div class="layout-wrapper">
+  <div class="layout-item">
+    <h3>stroke-miterlimit</h3>
+    <p>线条夹角的一半有关系 </p>
+    <svg width="200" height="150" id="strokeMiterlimit"></svg>
+  </div>
+  <div class="layout-item">
+    <h3>fill-rule</h3>
+    <svg width="200" height="150" id="fillRule"></svg>
+  </div>
+</div>
+</body>
+</html>
+<script type="module">
+  import {initD3Root, d3} from "../js";
+
+  const width = 400, height = 350;
+
+  {
+    // stroke-dashoffset
+    const svg = initD3Root({
+      selector: '#strokeDashoffset',
+      width, height
+    });
+    const line = svg.append('line')
+      .attr('x1', 10)
+      .attr('y1', height / 2)
+      .attr('x2', width - 20)
+      .attr('y2', height / 2)
+      .attr('stroke', '#000')
+      .attr('stroke-width', 2)
+      .attr('stroke-dasharray', [10, 450])
+      .attr('stroke-dashoffset', 10);
+    line
+      .transition()
+      .duration(1000)
+      .tween('offset', function () {
+        return t => {
+          d3.select(this)
+            .attr('stroke-dasharray', [450 * t, 450 - 450 * t]);
+        }
+      })
+      .on('end', function () {
+        line.attr('stroke-dasharray', [10, 5])
+          .attr('stroke-dashoffset', 0);
+      });
+
+    let i = 0;
+    let timer;
+    const text1 = svg.append('text')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('dy', '1em')
+      .style('cursor', 'pointer')
+      .text('dashoffset++')
+      .on('click', function () {
+        if (timer) timer.stop();
+        timer = d3.timer(function () {
+          line.attr('stroke-dashoffset', ++i + '%');
+          text1.text('dashoffset++' + i);
+          text2.text('dashoffset--');
+        })
+      });
+
+    const text2 = svg.append('text')
+      .attr('x', 200)
+      .attr('y', 0)
+      .attr('dy', '1em')
+      .style('cursor', 'pointer')
+      .text('dashoffset--')
+      .on('click', function () {
+        if (timer) timer.stop();
+        timer = d3.timer(function () {
+          line.attr('stroke-dashoffset', --i);
+          text2.text('dashoffset--' + i);
+          text1.text('dashoffset++');
+        });
+      })
+
+  }
+
+  {
+    // stroke-miterlimit
+    const svg = initD3Root({
+      selector: '#strokeMiterlimit',
+      width, height,
+    });
+
+    const trianglePath = angle => {
+      const w = 200;
+      const r = 200;
+
+      const M = `M 0,0 `;
+      const L1 = `H ${w} `;
+      const L2 = `L ${Math.cos(angle) * r}, ${Math.sin(angle) * r}`;
+      return M + L1 + L2 + 'Z';
+    };
+
+    const {PI} = Math;
+
+    const path = svg.append('g')
+      .attr('transform', 'translate(150,150)')
+      .append('path')
+      .attr('d', trianglePath(0.5 * PI))
+      .attr('fill', 'none')
+      .attr('stroke', '#000')
+      .attr('stroke-linejoin', 'miter')
+      .attr('stroke-width', 15)
+      .attr('stroke-miterlimit', 1.414);
+
+    let oneRad = PI / 180;
+    let i = 0.5 * PI;
+    let timer = undefined;
+    svg.append('text')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('dy', '1em')
+      .style('cursor', 'pointer')
+      .text('angle++')
+      .on('click', () => {
+        if (timer) timer.stop();
+        timer = d3.timer(function () {
+          i = i + oneRad;
+          path.attr('d', trianglePath(i));
+        })
+      });
+
+    svg.append('text')
+      .attr('x', 300)
+      .attr('y', 0)
+      .attr('dy', '1em')
+      .style('cursor', 'pointer')
+      .text('angle--')
+      .on('click', () => {
+        if (timer) timer.stop();
+        timer = d3.timer(function () {
+          i = i - oneRad;
+          path.attr('d', trianglePath(i));
+        })
+      });
+
+  }
+
+  {
+    // fill-rule
+    const svg = initD3Root({
+      selector: '#fillRule',
+      width, height,
+    });
+
+    const path = svg.append('path')
+      .attr('fill', '#f00')
+      .attr('fill-rule', 'nonzero')
+      .attr('stroke', '#000')
+      .attr('stroke-width', 2)
+      .attr('d', () => {
+        const path = d3.path();
+        path.moveTo(80, 80);
+        path.lineTo(300, 80);
+        path.lineTo(280, 300);
+        path.lineTo(80, 300);
+        path.lineTo(260, 120);
+        path.lineTo(220, 280);
+        path.lineTo(200, 180);
+        path.lineTo(180, 260);
+
+        path.closePath();
+        return path;
+      });
+
+
+    svg.append('text')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('dy', '1em')
+      .style('cursor', 'pointer')
+      .text('nonzero')
+      .on('click', function () {
+        path.attr('fill-rule','nonzero');
+      });
+
+    svg.append('text')
+      .attr('x', 200)
+      .attr('y', 0)
+      .attr('dy', '1em')
+      .style('cursor', 'pointer')
+      .text('evenodd')
+      .on('click', function () {
+        path.attr('fill-rule','evenodd');
+      })
+
+  }
+
+</script>

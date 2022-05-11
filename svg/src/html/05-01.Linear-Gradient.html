@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>svg</title>
+  <link rel="stylesheet" href="./../css/index.css">
+  <style>
+    circle {
+      fill: #f00;
+    }
+  </style>
+  <script src="./../js/vendor/commonjs-simulator.min.js"></script>
+</head>
+<body>
+<h1>渐变--线性渐变</h1>
+<div class="layout-wrapper">
+  <div class="layout-item">
+    <h3>线性渐变</h3>
+    <svg id='gradient01'>
+      <defs id="defs">
+        <linearGradient id="Gradient1">
+          <stop class="stop1" offset="0%"></stop>
+          <stop class="stop2" offset="50%"></stop>
+          <stop class="stop3" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="red"></stop>
+          <stop offset="50%" stop-color="black" stop-opacity="0"></stop>
+          <stop offset="100%" stop-color="blue"></stop>
+        </linearGradient>
+        <style type="text/css">
+          #rect1 {
+            fill: url(#Gradient1);
+          }
+
+          .stop1 {
+            stop-color: red;
+          }
+
+          .stop2 {
+            stop-color: black;
+            stop-opacity: 0;
+          }
+
+          .stop3 {
+            stop-color: blue;
+          }
+        </style>
+      </defs>
+
+      <rect id="rect1" x="10" y="10" rx="15" ry="15" width="100" height="100"></rect>
+      <rect x="10" y="120" rx="15" ry="15" width="100" height="100" fill="url(#Gradient2)"></rect>
+      <g transform="translate(150,0)" id="group01"></g>
+    </svg>
+  </div>
+</div>
+</body>
+</html>
+<script type="module">
+  import {initD3Root} from "../js";
+
+  const width = 400;
+  const height = 300;
+
+  const gradientId = () => {
+    const id = Math.round(Math.random() * 0xFFFFFF).toString(16);
+    return 'gradient-' + id;
+  };
+
+  {
+    const svg = initD3Root({
+      selector: '#gradient01',
+      width, height
+    });
+
+    const id = gradientId();
+
+    const defs = svg.select('#defs');
+
+    const linearGradient = defs.append('linearGradient')
+      .attr('id', id)
+      // .attr('gradientTransform', 'rotate(45)')
+      .attr('gradientUnits', 'objectBoundingBox')
+      .attr('spreadMethod', 'repeat')
+      .attr('x1', 0)
+      .attr('y1', 0.5)
+      .attr('x2', 1)
+      .attr('y2', 0.5);
+
+
+    linearGradient.append('stop')
+      .attr('stop-color', '#f00')
+      .attr('stop-opacity', 1)
+      .attr('offset', 0);
+    linearGradient.append('stop')
+      .attr('stop-color', '#0f0')
+      .attr('stop-opacity', 0.2)
+      .attr('offset', 0.5);
+    linearGradient.append('stop')
+      .attr('stop-color', '#00f')
+      .attr('stop-opacity', 1)
+      .attr('offset', 1);
+
+    const group = svg.select('#group01');
+    group.append('rect')
+      .attr('x', 0)
+      .attr('y', 30)
+      .attr('rx', 5)
+      .attr('ry', 5)
+      .attr('width', 100)
+      .attr('height', 100)
+      .attr('fill', `url(#${id})`);
+
+  }
+
+</script>

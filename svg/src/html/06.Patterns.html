@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>svg</title>
+  <link rel="stylesheet" href="./../css/index.css">
+  <style>
+    /*circle {*/
+    /*  fill: #f00;*/
+    /*}*/
+  </style>
+  <script src="./../js/vendor/commonjs-simulator.min.js"></script>
+</head>
+
+<body>
+  <h1>Patterns?? 模式??</h1>
+  <div class="layout-wrapper">
+    <div class="layout-item">
+      <h3>pattern</h3>
+      <svg width="200" height="200">
+        <defs>
+          <linearGradient id="Gradient1">
+            <stop offset="5%" stop-color="white"></stop>
+            <stop offset="95%" stop-color="blue"></stop>
+          </linearGradient>
+          <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="5%" stop-color="red"></stop>
+            <stop offset="95%" stop-color="orange"></stop>
+          </linearGradient>
+          <pattern id="Pattern" x="0" y="0" width=".25" height=".25">
+            <rect x="0" y="0" width="50" height="50" fill="skyblue"></rect>
+            <rect x="0" y="0" width="25" height="25" fill="url(#Gradient2)"></rect>
+            <circle cx="25" cy="25" r="20" fill="url(#Gradient1)" fill-opacity="0.5"></circle>
+          </pattern>
+        </defs>
+        <rect fill="url(#Pattern)" stroke="black" x="0" y="0" width="200" height="200"></rect>
+      </svg>
+    </div>
+    <div class="layout-item">
+      <svg id="patternSvg">
+        <defs id="patternDefs"></defs>
+      </svg>
+    </div>
+  </div>
+</body>
+
+</html>
+<script type="module">
+  import { initD3Root, d3LinearGradient, d3 } from "../js/index.js";
+
+  const width = 400, height = 350;
+
+  const svg = initD3Root({
+    selector: '#patternSvg',
+    width, height,
+  });
+
+  const d3Defs = d3.select('#patternDefs');
+
+  d3LinearGradient({
+    d3Defs,
+    id: 'linear-gradient',
+    colors: [
+      { color: '#fff', offset: '5%' },
+      { color: '#00f', offset: '95%' },
+    ],
+  });
+  d3LinearGradient({
+    d3Defs,
+    id: 'linear-gradient-2',
+    colors: [
+      { color: 'red', offset: '5%' },
+      { color: 'orange', offset: '95%' },
+    ],
+  });
+
+  // 垂直和水平的重复4次
+  // 宽高被设置位0.25
+  const pattern = d3Defs.append('pattern')
+    .attr('id', 'pattern02')
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('width', 25)
+    .attr('height', 25)
+    .attr('patternContentUnits', 'objectBoundingBox')
+    .attr('patternUnits', 'objectBoundingBox');
+
+  pattern.append('rect')
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('width', .5)
+    .attr('height', .8)
+    .attr('fill', 'url(#linear-gradient)');
+
+  // pattern.append('circle')
+  //   .attr('cx', 25)
+  //   .attr('cy', 25)
+  //   .attr('r', 20)
+  //   .attr('fill', 'url(#linear-gradient-2)');
+
+  svg.append('rect')
+    .attr('stroke', '#000')
+    .attr('stroke-width', 1)
+    .attr('x', 10)
+    .attr('y', 10)
+    .attr('width', 300)
+    .attr('height', 300)
+    .attr('fill', 'url(#pattern02)');
+
+
+</script>

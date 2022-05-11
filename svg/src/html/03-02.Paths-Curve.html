@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>svg</title>
+  <link rel="stylesheet" href="./../css/index.css">
+  <style>
+    circle {
+      fill: #f00;
+    }
+  </style>
+  <script src="./../js/vendor/commonjs-simulator.min.js"></script>
+</head>
+<body>
+<h1>Curve commands</h1>
+<div class="layout-wrapper">
+  <div class="layout-item">
+    <h3>Bezier Curves 三次贝塞尔曲线</h3>
+    <svg width="200" height="200" version="1.2" xmlns="http://www.w3.org/2000/svg"
+         id="svg01">
+      <path d="M10 10 C 20 20, 40 20, 50 10" stroke="black" fill="transparent"></path>
+      <path d="M70 10 C 70 20, 120 20, 120 10" stroke="black" fill="transparent"></path>
+      <path d="M130 10 C 120 20, 180 20, 170 10" stroke="black" fill="transparent"></path>
+      <path d="M10 60 C 20 80, 40 80, 50 60" stroke="black" fill="transparent"></path>
+      <path d="M70 60 C 70 80, 110 80, 110 60" stroke="black" fill="transparent"></path>
+      <path d="M130 60 C 120 80, 180 80, 170 60" stroke="black" fill="transparent"></path>
+      <path d="M10 110 C 20 140, 40 140, 50 110" stroke="black" fill="transparent"></path>
+      <path d="M70 110 C 70 140, 110 140, 110 110" stroke="black" fill="transparent"></path>
+      <path d="M130 110 C 120 140, 180 140, 170 110" stroke="black" fill="transparent"></path>
+    </svg>
+  </div>
+  <div class="layout-item">
+    <h3>Bezier Curves 三次贝塞尔曲线</h3>
+    <cite>一个点某一侧的控制点是它另一侧的控制点的对称（以保持斜率不变）</cite>
+    <br>
+    <svg width="400" height="200" version="1.2"
+         xmlns="http://www.w3.org/2000/svg"
+         id="svg02">
+      <path d="M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80" stroke="red" stroke-width="5" fill="transparent"></path>
+      <path d="M10 80 C 40 10, 65 10, 95 80 C 125 150, 150 150, 180 80" stroke="black" fill="transparent"></path>
+
+      <!-- C命令和S命令的对比-->
+      <path d="M 195 80 C 195 80, 250 250, 280 80" stroke="#00f" stroke-width="8" fill="transparent"></path>
+      <path d="M 195 80 S 250 250, 280 80" stroke="#f00" stroke-width="4" fill="transparent"></path>
+
+    </svg>
+    <br>
+    <cite>
+      红线和黑线是一样的，但是代码不一样
+    </cite>
+  </div>
+</div>
+<div class="layout-wrapper">
+  <div class="layout-item">
+    <h3>quadratic curve 二次贝塞尔曲线</h3>
+    <svg width="200" height="200">
+      <path d="M10 80 Q 95 10 180 80" stroke="black" fill="transparent"></path>
+    </svg>
+  </div>
+  <div class="layout-item">
+    <svg width="190px" height="160px" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 80 Q 52.5 10, 95 80 T 180 80" stroke="black" fill="transparent"></path>
+    </svg>
+  </div>
+</div>
+
+<div class="layout-wrapper">
+  <div class="layout-item">
+    <h3>弧线命令 A</h3>
+    <svg width="325px" height="325px">
+      <path d="M 80 80
+               A 45 45, 0, 0, 0, 125 125
+               L 125 80 Z" fill="green"></path>
+      <path d="M 230 80
+               A 45 45, 0, 1, 0, 275 125
+               L 275 80 Z" fill="red"></path>
+      <path d="M 80 230
+               A 45 45, 0, 0, 1, 125 275
+               L 125 230 Z" fill="purple"></path>
+      <path d="M 230 230
+               A 45 45, 0, 1, 1, 275 275
+               L 275 230 Z" fill="blue"></path>
+    </svg>
+  </div>
+</div>
+
+
+</body>
+</html>
+<script type="module">
+  // import {d3} from "../js";
+  //
+  // // const d3Svg = d3.select('#svg02');
+  // // d3Svg.append('circle')
+  // //   .attr('cx', 120)
+  // //   .attr('cy', 140)
+  // //   .attr('r', 2);
+
+</script>

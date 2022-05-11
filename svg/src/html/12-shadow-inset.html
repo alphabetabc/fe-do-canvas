@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>svg</title>
+</head>
+
+<body>
+  <p>内发光</p>
+
+  <svg width="600" height="600">
+    <defs>
+      <!-- <filter id="inset-shadow" x="-50%" y="-50%" width="200%" height="200%">
+        <feComponentTransfer in=SourceAlpha>
+          <feFuncA type="table" tableValues="1 0" />
+        </feComponentTransfer>
+        <feGaussianBlur stdDeviation="4" />
+        <feOffset dx="0" dy="1" result="offsetblur" />
+        <feFlood flood-color="#0d619d" result="color" />
+        <feComposite in2="offsetblur" operator="in" />
+        <feComposite in2="SourceAlpha" operator="in" />
+        <feMerge>
+          <feMergeNode in="SourceGraphic" />
+          <feMergeNode />
+        </feMerge>
+      </filter> -->
+
+      <filter id="inset-shadow2">
+        <feFlood flood-color="rgb(54,243,255)" />
+        <feComposite in2="SourceGraphic" operator="out" />
+        <feGaussianBlur stdDeviation="10" result="blur" />
+        <feComposite operator="atop" in2="SourceGraphic" />
+      </filter>
+    </defs>
+    <!-- <rect x=100 y=100 width=20% height=50% fill=transparent filter="url(#inset-shadow)" /> -->
+    <text x="100" y="250" font-size="80" font-weight="bold" stroke="#0e0c24" filter="url(#inset-shadow2)">
+      INSET SHADOW
+    </text>
+    <g transform="translate(100 100)">
+      <path stroke="#36f3ff" stroke-shadow="red" fill="rgba(77,236,235,0.8)" filter="url(#inset-shadow2)"
+        d="M-38.89087296526011,38.890872965260115A55,55,0,1,1,38.89087296526016,38.890872965260066L24.748737341529193,24.748737341529132A35,35,0,1,0,-24.74873734152916,24.748737341529164Z">
+      </path>
+    </g>
+  </svg>
+
+  <svg width="800px" height="600px">
+    <defs>
+      <filter id="inner-glow">
+        <feFlood flood-color="red" />
+        <feComposite in2="SourceAlpha" operator="out" />
+        <feGaussianBlur stdDeviation="2" result="blur" />
+        <feComposite operator="atop" in2="SourceGraphic" />
+      </filter>
+    </defs>
+
+    <text filter="url(#inner-glow)" x="30" y="100" font-size="80" font-family="Sans-Serif" font-weight="bold"
+      fill="rgb(77,236,235)">
+      SVG Filters
+    </text>
+
+  </svg>
+</body>
+
+</html>

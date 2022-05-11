@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>svg</title>
+  <link rel="stylesheet" href="./../css/index.css">
+  <style>
+
+  </style>
+  <script src="./../js/vendor/commonjs-simulator.min.js"></script>
+</head>
+
+<body>
+  <h1>滤镜</h1>
+  <div class="layout-wrapper" id="wrapper01">
+    <div class="layout-item">
+      <svg id="svg"></svg>
+    </div>
+  </div>
+</body>
+
+</html>
+<script type="module">
+  import {
+    initD3Root,
+    d3RadialGradient, d3,
+  } from "../js/index.js";
+
+  const width = 400, height = 350;
+
+  const svg = initD3Root({
+    selector: '#svg', width, height
+  });
+
+  const d3Filter = svg.append('defs')
+    .append('filter')
+    .attr('id', 'myFilter')
+    .attr('filterUnits', 'userSpaceOnUse')
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('width', 250)
+    .attr('height', 200);
+
+  // offsetBlur
+  d3Filter.append('feGaussianBlur')
+    .attr('in', 'SourceAlpha')
+    .attr('stdDeviation', 4)
+    .attr('result', 'blur');
+  d3Filter.append('feOffset')
+    .attr('in', 'blur')
+    .attr('dx', 4)
+    .attr('dy', 4)
+    .attr('result', 'offsetBlur');
+
+  // litPaint
+  const light = d3Filter.append('feSpecularLighting')
+    .attr('in', 'blur')
+    .attr('surfaceScale', 5)
+    .attr('specularConstant', .75)
+    .attr('specularExponent', 20)
+    .attr('lighting-color', '#666')
+    .attr('result', 'specOut');
+  light.append('fePointLight')
+    .attr('x', -5000)
+    .attr('y', -10000)
+    .attr('z', 20000);
+  d3Filter.append('feComposite')
+    .attr('in', 'specOut')
+    .attr('in2', 'SourceAlpha')
+    .attr('operator', 'in')
+    .attr('result', 'specOut');
+  d3Filter.append('feComposite')
+    .attr('in', 'SourceGraphic')
+    .attr('in2', 'specOut')
+    .attr('operator', 'arithmetic')
+    .attr('k1', 0)
+    .attr('k2', 1)
+    .attr('k3', 1)
+    .attr('k4', 0)
+    .attr('result', 'litPaint');
+
+  // merge offsetBlur litPaint
+  const feMerge = d3Filter.append('feMerge');
+  feMerge.append('feMergeNode')
+    .attr('in', 'offsetBlur');
+  feMerge.append('feMergeNode')
+    .attr('in', 'litPaint');
+
+
+  const g = svg.append('g')
+    .attr('transform', 'translate(100,100)')
+    .attr('filter', 'url(#myFilter)');
+
+  g.append('path')
+    .attr('d', 'M50,66 c-50,0 -50,-60 0,-60 h100 c50,0 50,60 0,60z')
+    .attr('fill', 'none')
+    .attr('stroke', '#d90000')
+    .attr('stroke-width', 10);
+  g.append('path')
+    .attr('fill', '#d90000')
+    .attr('d', 'M60,56 c-30,0 -30,-40 0,-40 h80 c30,0 30,40 0,40z');
+
+  g.append('g')
+    .attr('fill', '#ffffff')
+    .attr('stroke', '#000')
+    .attr('font-size', '45')
+    .append('text')
+    .attr('x', 52)
+    .attr('y', 52)
+    .text('SVG');
+
+
+</script>

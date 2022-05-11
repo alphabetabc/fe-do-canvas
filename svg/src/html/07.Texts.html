@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>svg</title>
+  <link rel="stylesheet" href="./../css/index.css">
+  <style>
+    /*circle {*/
+    /*  fill: #f00;*/
+    /*}*/
+  </style>
+  <script src="./../js/vendor/commonjs-simulator.min.js"></script>
+</head>
+<body>
+<h1>Texts</h1>
+<div class="layout-wrapper">
+  <div class="layout-item">
+    <h3>text</h3>
+    <svg id="textWrapper"></svg>
+  </div>
+  <div class="layout-item">
+    <h3>tspan</h3>
+    <svg id="textWrapper2"></svg>
+  </div>
+  <div class="layout-item">
+    <h3>textPath</h3>
+    <svg id="textWrapper3"></svg>
+  </div>
+</div>
+</body>
+</html>
+<script type="module">
+  import {initD3Root, d3LinearGradient, d3} from "../js";
+
+  const width = 200, height = 150;
+
+  {
+    // text
+    const svg = initD3Root({
+      selector: '#textWrapper',
+      width, height,
+    });
+
+    svg.append('text')
+      .attr('x', 0)
+      .attr('y', 20)
+      .attr('dx', 0)
+      .attr('dy', 0)
+      .attr('textLength', 200)
+      .attr('lengthAdjust', 'spacingAndGlyphs')
+      .text('text1');
+
+    svg.append('text')
+      .attr('x', 0)
+      .attr('y', 50)
+      .attr('dx', 50)
+      .attr('dy', 0)
+      .attr('rotate', 30)
+      .text('text2');
+  }
+
+  {
+    // tspan
+    const svg = initD3Root({
+      selector: '#textWrapper2', width, height,
+    });
+
+    const text = svg.append('text')
+    // .attr('x', 10)
+    // .attr('y', 20)
+    // .attr('dx', 0)
+    // .attr('dy', 0);
+
+    text.append('tspan')
+      .attr('x', '100%')
+      .attr('y', 20)
+      .attr('text-anchor', 'end')
+      .text('line1');
+    text.append('tspan')
+      .attr('text-anchor', 'end')
+      .attr('x', '100%')
+      .attr('y', 35)
+      .text('line21354468');
+  }
+
+  {
+    const svg = initD3Root({
+      selector: '#textWrapper3'
+    });
+    svg.attr('viewBox', `0 0 ${width} ${height}`);
+
+    const path = svg.append('path')
+      .attr('id', 'textPath')
+      .attr('d', 'M10,90 Q90,90 90,45 Q90,10 50,10 Q10,10 10,40 Q10,70 45,70 Q70,70 75,50')
+      .attr('fill', 'none')
+      .attr('stroke', '#f00')
+      .attr('stroke-width', 2);
+
+    svg.append('text')
+      .append('textPath')
+      .attr('href', '#textPath')
+      .attr('startOffset', -path.node().getTotalLength())
+      .text('Quick brown fox jumps over the lazy dog.')
+      .transition()
+      .duration(1000)
+      .attr('startOffset', 0);
+  }
+
+
+</script>

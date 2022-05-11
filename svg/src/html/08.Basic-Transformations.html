@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>svg</title>
+  <link rel="stylesheet" href="./../css/index.css">
+  <style>
+    /*circle {*/
+    /*  fill: #f00;*/
+    /*}*/
+  </style>
+  <script src="./../js/vendor/commonjs-simulator.min.js"></script>
+</head>
+
+<body>
+  <h1>基础变换</h1>
+  <div class="layout-wrapper">
+    <div class="layout-item">
+      <svg id="svg01"></svg>
+    </div>
+    <div class="layout-item">
+      <svg viewBox="-50 -50 100 100" xmlns="http://www.w3.org/2000/svg">
+        <!-- uniform scale -->
+        <circle cx="0" cy="0" r="10" fill="red" transform="scale(4)"></circle>
+
+        <!-- vertical scale -->
+        <circle cx="0" cy="0" r="10" fill="yellow" transform="scale(1,4)"></circle>
+
+        <!-- horizontal scale -->
+        <circle cx="0" cy="0" r="10" fill="pink" transform="scale(4,1)"></circle>
+
+        <!-- No scale -->
+        <circle cx="0" cy="0" r="10" fill="black"></circle>
+      </svg>
+    </div>
+  </div>
+  <div class="layout-wrapper">
+    <div class="layout-item">
+      <svg xmlns="http://www.w3.org/2000/svg" width="400" height="350" version="1.1">
+        <svg width="200" height="200" viewBox="0 0 50 50" fill="rgba(0,255,0,0.5)">
+          <rect x="0" y="0" width="50" height="50" stroke-width="1" stroke="#00f"></rect>
+        </svg>
+        <rect width="50" height="50" fill="#f00" fill-opacity="1"></rect>
+      </svg>
+    </div>
+    <div class="layout-item">
+      <svg viewBox="0 0 30 30" style="border: 1px solid #000;" fill="rgba(0,255,0,0.5)" id="svg-viewBoxTest">
+        <rect x="0" y="0" width="30" height="30" stroke-width="2" stroke="#00f"></rect>
+      </svg>
+    </div>
+  </div>
+</body>
+
+</html>
+<script type="module">
+  import { initD3Root, d3 } from "../js/index.js";
+
+  const width = 400, height = 350;
+
+  {
+    const svg = initD3Root({
+      selector: '#svg01', width, height
+    });
+
+    svg.append('defs')
+      .append('rect')
+      .attr('id', 'rect')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', 100)
+      .attr('height', 100);
+
+    // translate(x y)
+    svg.append('use')
+      .attr('href', '#rect')
+      .attr('transform', 'translate(10,10)');
+
+    // rotate(deg cx cy)
+    svg.append('use')
+      .attr('href', '#rect')
+      .attr('transform', 'translate(200,10) rotate(0,50,50)')
+      .transition()
+      .duration(1000)
+      .ease(d3.easeLinear)
+      .attrTween('transform', () => {
+        return t => {
+          return `translate(200,10) rotate(${360 * t},50,50)`
+        }
+      });
+
+    // skewX(deg) skewY(deg)
+    svg.append('use')
+      .attr('href', '#rect')
+      .attr('transform', 'translate(10,200) skewX(0)')
+      .attr('transform-origin', '50 50')
+      .transition()
+      .duration(3000)
+      .ease(d3.easeLinear)
+      .attrTween('transform', () => {
+        return t => {
+          return `translate(10,200) skewX(${360 * t})`
+        }
+      });
+
+    // scale(x y)
+    svg.append('use')
+      .attr('href', '#rect')
+      .attr('transform', 'translate(200,200) scale(0)')
+      .attr('transform-origin', '50 50')
+      .transition()
+      .duration(3000)
+      .ease(d3.easeLinear)
+      .attrTween('transform', () => {
+        return t => {
+          return `translate(200,200) scale(${1 * t})`
+        }
+      });
+
+  }
+
+
+</script>

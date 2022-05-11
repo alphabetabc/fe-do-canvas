@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>svg</title>
+  <link rel="stylesheet" href="./../css/index.css">
+  <style>
+    path {
+      fill: yellow;
+      stroke: black;
+      stroke-width: 8px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: none;
+    }
+
+    rect:hover,
+    rect:active {
+      outline: 1px solid red;
+    }
+  </style>
+  <script src="./../js/vendor/commonjs-simulator.min.js"></script>
+</head>
+
+<body>
+  <h1>滤镜</h1>
+  <div class="layout-wrapper" id="wrapper01">
+    <div class="layout-item">
+      <h3>滤镜</h3>
+      <svg id="svg01"></svg>
+    </div>
+    <div class="layout-item">
+
+    </div>
+    <div class="tip" id="tip"></div>
+  </div>
+</body>
+
+</html>
+<script type="module">
+  import {
+    initD3Root,
+    tipRender, d3Mouse,
+    d3RadialGradient,
+  } from "../js/index.js";
+
+
+  const tip = tipRender('#tip');
+  const mouseInteract = function (selection, content) {
+    selection
+      .on('mousemove', () => {
+        const [x, y] = d3Mouse('#wrapper01');
+        tip.show(x, y, content);
+      })
+      .on('mouseout', () => {
+        tip.hide();
+      })
+  };
+
+  const width = 400, height = 350;
+
+  const svg = initD3Root({
+    selector: '#svg01', width, height,
+  });
+
+  const d3Defs = svg.append('defs');
+
+  const d3Filter = (id) => {
+    return d3Defs.append('filter').attr('id', id)
+  };
+
+  const d3Circle = (cx, cy, r) => {
+    return svg.append('circle')
+      .attr('cx', cx).attr('cy', cy)
+      .attr('r', r);
+  };
+
+  {
+    // feGaussianBlur
+    const feGaussianBlurFilter = d3Filter('gaussian');
+    feGaussianBlurFilter.append('feGaussianBlur')
+      .attr('in', 'SourceGraphic')
+      .attr('stdDeviation', 1);
+
+    d3Circle(80, 80, 40)
+      .attr('fill', '#0f0')
+      .attr('stroke', '#f00')
+      .attr('filter', 'url(#gaussian)')
+      .call(mouseInteract, 'feGaussianBlur-高斯模糊');
+
+  }
+
+  {
+    // feOffset
+    const feOffsetFilter = d3Filter('feOffset');
+    feOffsetFilter.append('feOffset')
+      .attr('in', 'SourceGraphic')
+      .attr('dx', 20)
+      .attr('dy', 20);
+
+    d3Circle(200, 80, 40)
+      .attr('fill', '#0f0')
+      .attr('stroke', '#f00')
+      .attr('filter', 'url(#feOffset)')
+      .call(mouseInteract, 'feOffset-图形偏移');
+  }
+
+  {
+    // feSpecularLighting
+    const feSpecularLightingFilter = d3Filter('feSpecularLighting');
+    feSpecularLightingFilter
+      .append('feSpecularLighting')
+      .attr('in', 'SourceGraphic')
+      .attr('surfaceScale', 1)
+      .attr('specularConstant', 0.4)
+      .attr('specularExponent', 1)
+      .attr('lighting-color', '#f00')
+      .append('fePointLight')
+      .attr('x', 80)
+      .attr('y', 200)
+      .attr('z', 10);
+
+    d3Circle(80, 200, 40)
+      .attr('fill', '#000')
+      .attr('stroke', '#f00')
+      .attr('filter', 'url(#feSpecularLighting)')
+      .call(mouseInteract, 'feSpecularLighting-光源');
+  }
+
+  {
+    // feComposite 立体感觉的球
+    const feCompositeFilter = d3Filter('feComposite');
+    feCompositeFilter.append('feSpecularLighting')
+      .attr('result', 'specOut')
+      .attr('specularExponent', 20)
+      .attr('lighting-color', '#fff')
+      .append('fePointLight')
+      .attr('x', 150)
+      .attr('y', 175)
+      .attr('z', 100);
+    feCompositeFilter.append('feComposite')
+      .attr('in', 'SourceGraphic')
+      .attr('in2', 'specOut')
+      .attr('operator', 'arithmetic')
+      .attr('k1', 0)
+      .attr('k2', 1)
+      .attr('k3', 1)
+      .attr('k4', 0);
+
+    d3Circle(200, 200, 40)
+      .attr('filter', 'url(#feComposite)')
+      .call(mouseInteract, 'feComposite');
+
+    // 用渐变实现一下
+    d3RadialGradient({
+      d3Defs,
+      id: 'radial-gradient-circle',
+      focusPoint: {
+        fx: 0.15,
+        fy: 0.15,
+        fr: 0.2
+      },
+      colors: ['#fff', '#000']
+    });
+    d3Circle(200, 300, 40)
+      .style('stroke', '#000')
+      .style('fill', 'url(#radial-gradient-circle)')
+      .call(mouseInteract, 'radial-gradient');
+  }
+
+  {
+    // feMerge feMergeNode
+
+    const feMergeFilter = d3Filter('feMerge');
+    feMergeFilter.append('feGaussianBlur')
+      .attr('result', 'blur')
+      .attr('stdDeviation', 5);
+    const feMerge = feMergeFilter.append('feMerge');
+
+    feMerge.append('feMergeNode')
+      .attr('in', 'blur');
+    feMerge.append('feMergeNode')
+      .attr('in', 'SourceGraphic');
+
+    d3Circle(300, 200, 40)
+      .attr('fill', '#f00')
+      .attr('stroke', 'rgba(0,0,0,0.3)')
+      .attr('stroke-width', 2)
+      .attr('filter', 'url(#feMerge)')
+      .call(mouseInteract, 'feMerge+feMergeNode')
+  }
+
+
+</script>

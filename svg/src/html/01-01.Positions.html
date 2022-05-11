@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>svg</title>
+</head>
+<body>
+<ul>
+  <li>svg相当于一个行内元素</li>
+  <li>
+    下面两个图的rect元素是一样大小的，却显示了不同的样子 <br>
+    <cite>
+      <code> rect x:0 y:0 width:100 height:100</code>
+    </cite>
+    <br>
+    <cite>
+      viewBox属性定义了画布上可以显示的区域：从(0,0)点开始，100宽*100高的区域。 <br>
+      这个100*100的区域，会放到200*200的画布上显示。于是就形成了放大两倍的效果。
+    </cite>
+  </li>
+</ul>
+<svg width="100" height="100" style="border: 1px solid #000;">
+  <rect x="0" y="0" width="100" height="100" fill="#f00"></rect>
+</svg>
+<svg width="200" height="200" viewbox="0 0 100 100" style="border: 1px solid #000;">
+  <rect x="0" y="0" width="100" height="100" fill="#0f0"></rect>
+</svg>
+</body>
+</html>
+<script type="module">
+</script>

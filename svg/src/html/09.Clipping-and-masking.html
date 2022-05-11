@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>svg</title>
+  <link rel="stylesheet" href="./../css/index.css">
+  <style>
+    /*circle {*/
+    /*  fill: #f00;*/
+    /*}*/
+  </style>
+  <script src="./../js/vendor/commonjs-simulator.min.js"></script>
+</head>
+
+<body>
+  <h1>裁剪和遮罩</h1>
+  <div class="layout-wrapper">
+    <div class="layout-item">
+      <h3>裁剪</h3>
+      <svg id="svg01"></svg>
+    </div>
+    <div class="layout-item">
+      <h3>遮罩</h3>
+      <svg id="svg02"></svg>
+    </div>
+  </div>
+  <div class="layout-wrapper">
+    <div class="layout-item">
+      <h3>利用stroke-opacity、fill-opacity进行叠加</h3>
+      <svg width="200" height="200" version="1.1" xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink">
+        <rect x="0" y="0" width="200" height="200" fill="blue"></rect>
+        <circle cx="100" cy="100" r="50" stroke="yellow" stroke-width="40" stroke-opacity=".5" fill="red"></circle>
+      </svg>
+    </div>
+  </div>
+  <div class="layout-wrapper">
+    <div class="layout-item">
+      <h3>clipPath</h3>
+      <svg width="300" height="300">
+        <defs>
+          <clipPath id="myClip">
+            <!--
+            Everything outside the circle will be
+            clipped and therefore invisible.
+          -->
+            <circle cx="40" cy="35" r="35"></circle>
+          </clipPath>
+        </defs>
+
+        <!-- The original black heart, for reference -->
+        <path id="heart" d="M10,30 A20,20,0,0,1,50,30 A20,20,0,0,1,90,30 Q90,60,50,90 Q10,60,10,30 Z"></path>
+
+        <!--
+        Only the portion of the red heart
+        inside the clip circle is visible.
+      -->
+        <use clip-path="url(#myClip)" href="#heart" fill="red"></use>
+      </svg>
+    </div>
+  </div>
+</body>
+
+</html>
+<script type="module">
+  import { initD3Root, d3, d3LinearGradient } from "../js/index.js";
+
+  const width = 400, height = 350;
+
+  {
+    // 裁剪
+    const svg = initD3Root({
+      selector: '#svg01',
+      width, height,
+    });
+
+    svg.append('defs')
+      .append('clipPath')
+      .attr('id', 'cut-off-bottom')
+      .append('rect')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', 200)
+      .attr('height', 100);
+
+    svg.append('circle')
+      .attr('cx', 100)
+      .attr('cy', 100)
+      .attr('r', 50)
+      .attr('clip-path', 'url(#cut-off-bottom)');
+
+  }
+
+  {
+    // 遮罩
+    const svg = initD3Root({
+      selector: '#svg02', width, height,
+    });
+
+    const d3Defs = svg.append('defs');
+    d3LinearGradient({
+      d3Defs,
+      id: 'gradient-linear',
+      colors: [
+        'transparent',
+        'white'
+      ],
+    });
+
+    d3Defs.append('mask')
+      .attr('id', 'mask')
+      .append('rect')
+      .attr('x', 10)
+      .attr('y', 10)
+      .attr('width', 200)
+      .attr('height', 200)
+      .attr('fill', 'url(#gradient-linear)');
+
+    svg.append('rect')
+      .attr('x', 10)
+      .attr('y', 10)
+      .attr('width', 200)
+      .attr('height', 200)
+      .attr('fill', 'green');
+
+    svg.append('rect')
+      .attr('x', 10)
+      .attr('y', 10)
+      .attr('width', 200)
+      .attr('height', 200)
+      .attr('fill', 'red')
+      .attr('mask', 'url(#mask)');
+  }
+
+
+</script>

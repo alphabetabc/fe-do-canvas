@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>svg</title>
+  <link rel="stylesheet" href="./../css/index.css">
+  <style>
+    path {
+      fill: yellow;
+      stroke: black;
+      stroke-width: 8px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: none;
+    }
+
+    rect:hover,
+    rect:active {
+      outline: 1px solid red;
+    }
+  </style>
+  <script src="./../js/vendor/commonjs-simulator.min.js"></script>
+</head>
+
+<body>
+  <h1>其他内容</h1>
+  <div class="layout-wrapper">
+    <div class="layout-item">
+      <h3>图片</h3>
+      <svg id="svg01"></svg>
+    </div>
+    <div class="layout-item">
+      <h3>preserveAspectRatio</h3>
+      <svg viewBox="-1 -1 162 92" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <path id="smiley" d="M50,10
+                 A40,40,1,1,1,50,90
+                 A40,40,1,1,1,50,10
+                 M30,40
+                 Q36,35,42,40
+                 M58,40
+                 Q64,35,70,40
+                 M30,60
+                 Q50,75,70,60
+                 Q50,75,30,60"></path>
+        </defs>
+
+        <!-- (width>height) meet -->
+        <svg preserveAspectRatio="xMidYMid meet" x="0" y="0" viewBox="0 0 100 100" width="20" height="10">
+          <use href="#smiley"></use>
+        </svg>
+        <svg preserveAspectRatio="xMinYMid meet" x="25" y="0" viewBox="0 0 100 100" width="20" height="10">
+          <use href="#smiley"></use>
+        </svg>
+        <svg preserveAspectRatio="xMaxYMid meet" x="50" y="0" viewBox="0 0 100 100" width="20" height="10">
+          <use href="#smiley"></use>
+        </svg>
+
+        <!-- (width>height) slice -->
+        <svg preserveAspectRatio="xMidYMin slice" x="0" y="15" viewBox="0 0 100 100" width="20" height="10">
+          <use href="#smiley"></use>
+        </svg>
+        <svg preserveAspectRatio="xMidYMid slice" x="25" y="15" viewBox="0 0 100 100" width="20" height="10">
+          <use href="#smiley"></use>
+        </svg>
+        <svg preserveAspectRatio="xMidYMax slice" x="50" y="15" viewBox="0 0 100 100" width="20" height="10">
+          <use href="#smiley"></use>
+        </svg>
+
+        <!-- (width<height) meet -->
+        <svg preserveAspectRatio="xMidYMin meet" x="75" y="0" viewBox="0 0 100 100" width="10" height="25">
+          <use href="#smiley"></use>
+        </svg>
+        <svg preserveAspectRatio="xMidYMid meet" x="90" y="0" viewBox="0 0 100 100" width="10" height="25">
+          <use href="#smiley"></use>
+        </svg>
+        <svg preserveAspectRatio="xMidYMax meet" x="105" y="0" viewBox="0 0 100 100" width="10" height="25">
+          <use href="#smiley"></use>
+        </svg>
+
+        <!-- (width<height) slice -->
+        <svg preserveAspectRatio="xMinYMid slice" x="120" y="0" viewBox="0 0 100 100" width="10" height="25">
+          <use href="#smiley"></use>
+        </svg>
+        <svg preserveAspectRatio="xMidYMid slice" x="135" y="0" viewBox="0 0 100 100" width="10" height="25">
+          <use href="#smiley"></use>
+        </svg>
+        <svg preserveAspectRatio="xMaxYMid slice" x="150" y="0" viewBox="0 0 100 100" width="10" height="25">
+          <use href="#smiley"></use>
+        </svg>
+
+        <!-- none -->
+        <svg preserveAspectRatio="none" x="0" y="30" viewBox="0 0 100 100" width="160" height="60">
+          <use href="#smiley"></use>
+        </svg>
+      </svg>
+    </div>
+  </div>
+</body>
+
+</html>
+<script type="module">
+  import { initD3Root } from "../js/index.js";
+
+  const width = 400, height = 350;
+
+  const svg = initD3Root({
+    selector: '#svg01', width, height,
+  });
+
+  svg.append('image')
+    .attr('href', '../images/favicon144.png')
+    .attr('x', 10)
+    .attr('y', 10)
+    .attr('width', 200)
+    .attr('height', 300)
+    .attr('preserveAspectRatio', 'xMinYMin slice')
+
+
+</script>

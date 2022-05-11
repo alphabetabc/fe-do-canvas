@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>svg</title>
+</head>
+
+<body>
+  <button id="btn">next</button>
+  <svg width="300" height="300" style="border: 1px solid #000;">
+    <rect x="0" y="0" id="rect" width="0" height="0" stroke-width="1" stroke="#f00" fill="#f00"></rect>
+    <svg fill="rgba(0,255,0,0.5)" fill-opacity="0.5" id="svg-viewBoxTest">
+      <rect x="0" y="0" width="50" height="50" stroke-width="2" stroke="#00f"></rect>
+    </svg>
+  </svg>
+</body>
+
+</html>
+<script type="module">
+  import {
+    stepsTest,
+    viewBoxScale,
+  } from "../js/index.js";
+
+  const svg = document.getElementById('svg-viewBoxTest');
+  const rect = document.getElementById('rect');
+  const btn = document.getElementById('btn');
+
+  const svgWidth = 800;
+  const svgHeight = 500;
+  const viewBoxConfig = [0, 0, 150, 50];
+  const rectW = 50, rectH = 50;
+
+  let scale = viewBoxScale({
+    svgSize: [svgWidth, svgHeight],
+    viewBoxConfig,
+  });
+
+  svg.setAttribute('viewBox', viewBoxConfig.toString());
+  svg.setAttribute('preserveAspectRatio', 'xMinYMin meet');
+  svg.setAttribute('width', svgWidth);
+  svg.setAttribute('height', svgHeight);
+
+  rect.setAttribute('width', rectW * scale);
+  rect.setAttribute('height', rectH * scale);
+
+  const steps = [
+    { viewBoxConfig: { x: 0, y: 0, width: 150, height: 150 }, svg: [100, 100] },
+    { viewBoxConfig: { x: 0, y: 0, width: 150, height: 150 }, svg: [300, 300] },
+    { viewBoxConfig: { x: 0, y: 0, width: 150, height: 150 }, svg: [250, 300] },
+    { viewBoxConfig: { x: 0, y: 0, width: 150, height: 150 }, svg: [150, 300] },
+    { viewBoxConfig: { x: 0, y: 0, width: 150, height: 150 }, svg: [50, 300] },
+    { viewBoxConfig: { x: 0, y: 0, width: 150, height: 150 }, svg: [300, 200] },
+    { viewBoxConfig: { x: 0, y: 0, width: 150, height: 150 }, svg: [300, 150] },
+    { viewBoxConfig: { x: 0, y: 0, width: 150, height: 150 }, svg: [300, 50] },
+
+    { viewBoxConfig: { x: 0, y: 0, width: 150, height: 150 }, svg: [800, 800] },
+    { viewBoxConfig: { x: 0, y: 0, width: 150, height: 50 }, svg: [800, 800] },
+    { viewBoxConfig: { x: 0, y: 0, width: 50, height: 150 }, svg: [800, 800] },
+
+    { viewBoxConfig: { x: 0, y: 0, width: 50, height: 150 }, svg: [200, 100] },
+    { viewBoxConfig: { x: 0, y: 0, width: 350, height: 150 }, svg: [50, 100] },
+  ];
+
+  const test = stepsTest(steps, (o = {}) => {
+    const {
+      viewBoxConfig = {},
+      svg: svgSize = []
+    } = o;
+    const { x, y, width, height } = viewBoxConfig;
+    const [svgWidth, svgHeight] = svgSize;
+    let scale = viewBoxScale({
+      svgSize: svgSize,
+      viewBoxConfig: [x, y, width, height]
+    });
+
+    svg.setAttribute('viewBox', [x - 2 / 2, y - 2 / 2, width, height].toString());
+    svg.setAttribute('preserveAspectRatio', 'xMinYMin meet');
+    svg.setAttribute('width', svgWidth);
+    svg.setAttribute('height', svgHeight);
+
+    rect.setAttribute('width', rectW * scale);
+    rect.setAttribute('height', rectH * scale);
+
+    console.log(rectW * scale, rectH * scale);
+
+  });
+
+  btn.onclick = function () {
+    const res = test.next();
+    if (res.done) {
+      btn.onclick = undefined;
+      alert('stop');
+    }
+  }
+
+
+</script>
