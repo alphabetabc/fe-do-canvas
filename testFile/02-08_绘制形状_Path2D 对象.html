@@ -92,8 +92,9 @@
   // 使用svg中path数据
   function useSvgPath() {
     let ctx = new CanvasCtx('#canvas3').ctx;
-    let path = new Path2D('M50 50 h 80 v 80 h -80 Z');
-    ctx.fill(path);
+    let path = new Path2D('M 80 50 h 50 v 300 h -50 Z M 80 50 L 100 20 L 150 20 L 130 50 Z M 130 50 L 150 20 L 150 320 L 130 350 Z');
+    // ctx.fill(path);
+    ctx.stroke(path)
   }
   useSvgPath();
 

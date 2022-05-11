@@ -69,10 +69,28 @@ main,.main{
   /*padding: 10px;*/
 }
 
+/*400*400的容器*/
+.wrap_400_200 {
+  width: 400px;
+  height: 200px;
+  border: 1px solid #000;
+  margin: 20px;
+  /*padding: 10px;*/
+}
+
 /*600*300的容器*/
 .wrap_600_300 {
   width: 600px;
   height: 300px;
+  border: 1px solid #000;
+  margin: 20px;
+  /*padding: 10px;*/
+}
+
+/*600*600的容器*/
+.wrap_600 {
+  width: 600px;
+  height: 600px;
   border: 1px solid #000;
   margin: 20px;
   /*padding: 10px;*/

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" href="./../css/style.css">
+</head>
+<body>
+<main class="clearFix">
+  <div class="contentWrap fl">
+    <div id="canvas" class="wrap_400_200">
+
+    </div>
+    <form id="render1">
+      <span>二次贝塞尔曲线</span>
+      <div>
+        起点 <input type="text" value="10, 100" id="sp1">
+      </div>
+      <div>
+        控制点 <input type="text" value="200, 10" id="cp1">
+      </div>
+      <div>
+        终点 <input type="text" value="390, 100" id="ep1">
+      </div>
+      <button type="submit">render</button>
+    </form>
+    <div id="canvas2" class="wrap_400_200">
+
+    </div>
+    <form id="render2">
+      <span>三次贝塞尔曲线</span>
+      <div>
+        起点 <input type="text" value="10, 190" id="sp2">
+      </div>
+      <div>
+        控制点1 <input type="text" value="10, 10" id="cp2-0">
+      </div>
+      <div>
+        控制点2 <input type="text" value="390, 190" id="cp2-1">
+      </div>
+      <div>
+        终点 <input type="text" value="390, 10" id="ep2">
+      </div>
+      <button type="submit">render</button>
+    </form>
+    <div id="canvas3" class="wrap_400_200">
+
+    </div>
+  </div>
+  <div class="contentWrap fr">
+
+  </div>
+</main>
+</body>
+</html>
+
+<script src="./../js/CanvasCtx.js"></script>
+<script>
+  {
+    function customizePath(path, func) {
+      const pathElement = document.createElementNS('http://www.w3.org/2000/svg', "path");
+      pathElement.setAttributeNS(null, 'd', path);
+      const length = pathElement.getTotalLength();
+      const duration = 1000;
+      const interval = length / duration;
+      let time = 0, step = 0;
+
+      const renderXY = function () {
+        const timer = requestAnimationFrame(renderXY);
+        if (time <= duration) {
+          const x = parseInt(pathElement.getPointAtLength(step).x);
+          const y = parseInt(pathElement.getPointAtLength(step).y);
+          func(x, y);
+          step += 2;
+        } else {
+          cancelAnimationFrame(timer)
+        }
+      };
+
+      renderXY()
+    }
+
+    const path = 'M0,0 C8,33.90861 25.90861,16 48,16 C70.09139,16 88,33.90861 88,56 C88,78.09139 105.90861,92 128,92 C150.09139,92 160,72 160,56 C160,40 148,24 128,24 C108,24 96,40 96,56 C96,72 105.90861,92 128,92 C154,93 168,78 168,56 C168,33.90861 185.90861,16 208,16 C230.09139,16 248,33.90861 248,56 C248,78.09139 230.09139,96 208,96 L48,96 C25.90861,96 8,78.09139 8,56 Z';
+    const canvasFactory = new CanvasCtx('#canvas');
+    const {
+      width, height, context,
+    } = canvasFactory;
+
+    const pathObj = new Path2D(path);
+
+    function move(x, y) {
+      context.fillStyle = 'rgba(255,255,255,1)';
+      context.clearRect(0, 0, width, height);
+
+      context.stroke(pathObj);
+
+      context.beginPath();
+      context.arc(x, y, 2, 0, Math.PI * 2, true);
+      context.fillStyle = '#f0f';
+      context.fill();
+      context.closePath();
+    }
+
+    customizePath(path, move);
+  }
+  {
+    // 二次贝塞尔曲线
+    // 公式 B(t)=(1-t)^2*P0 + 2*t*(1-t)P1 + t^2*P2; t∈[0,1]
+    // P0:startPoint, P1:controlPoint, P2:endPoint
+    let factory = new CanvasCtx('#canvas2');
+    const {
+      ctx, width, height
+    } = factory;
+
+    let quadraticBezierCreator = (p0, c1, p1) => {
+      return (t = 1) => (1 - t) * (1 - t) * p0 + 2 * t * (1 - t) * c1 + t * t * p1
+    };
+
+    let p0, c1, p1;
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#000';
+    ctx.fillStyle = '#000';
+
+    let t = 0, x, y;
+
+    function render() {
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.fillStyle = '#0f0';
+      ctx.arc(...p0, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(...p1, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.fillStyle = '#f00';
+      ctx.arc(...c1, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.save();
+      ctx.fillStyle = '#000';
+      ctx.beginPath();
+      ctx.arc(x(t), y(t), 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      t += 0.01;
+      if (t <= 1) {
+        requestAnimationFrame(render)
+      } else {
+        t = 0;
+
+        setTimeout(function () {
+          ctx.save();
+          ctx.strokeStyle = '#f00';
+          ctx.lineWidth = 5;
+          ctx.beginPath();
+          ctx.moveTo(...p0);
+          ctx.quadraticCurveTo(...c1, ...p1);
+          ctx.stroke();
+          ctx.restore();
+        }, 100);
+      }
+    }
+
+
+    select('#render1').onsubmit = e => {
+      e.preventDefault();
+
+      p0 = select('#sp1').value.split(',').map(d => parseFloat(d));
+      c1 = select('#cp1').value.split(',').map(d => parseFloat(d));
+      p1 = select('#ep1').value.split(',').map(d => parseFloat(d));
+
+      x = quadraticBezierCreator(p0[0], c1[0], p1[0]);
+      y = quadraticBezierCreator(p0[1], c1[1], p1[1]);
+
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.clearRect(0, 0, width, height);
+
+      render();
+    }
+
+  }
+  {
+    // 三次贝塞尔曲线
+    // B(t) = P0*(1-t)^3 + 3*P1*t*(1-t)^2 + 3*P2*t^2*(1-t) + P3*t^3; t∈[0,1]
+    // P0:startPoint, P1:controlPoint1, P2:controlPoint2, P3:endPoint
+    const pow = Math.pow;
+    const bezierCurveCreator = (p0, p1, p2, p3) => t => {
+      return p0 * pow((1 - t), 3) + 3 * p1 * t * pow((1 - t), 2) + 3 * p2 * t * t * (1 - t) + p3 * pow(t, 3)
+    };
+
+    const {ctx, width, height} = new CanvasCtx('#canvas3');
+
+    let p0, p1, cp1, cp2, x, y, t = 0;
+    ctx.fillStyle = '#000';
+
+    function render2() {
+      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+      ctx.clearRect(0, 0, width, height);
+
+      ctx.save();
+      ctx.strokeStyle = '#0f0';
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(...p0);
+      ctx.bezierCurveTo(...cp1, ...cp2, ...p1);
+      ctx.stroke();
+      ctx.restore();
+
+      // start end
+      ctx.save();
+      ctx.beginPath();
+      ctx.fillStyle = '#0f0';
+      ctx.arc(...p0, 5, 0, Math.PI * 2);
+      ctx.arc(...p1, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // control
+      ctx.save();
+      ctx.beginPath();
+      ctx.fillStyle = '#f00';
+      ctx.arc(...cp1, 5, 0, Math.PI * 2);
+      ctx.arc(...cp2, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.fillStyle = '#000';
+      ctx.arc(x(t), y(t), 2.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      t += 0.01;
+      if (t <= 1) {
+        requestAnimationFrame(render2);
+      } else {
+        t = 0;
+        setTimeout(function () {
+          ctx.save();
+          ctx.strokeStyle = '#f00';
+          ctx.lineWidth = 5;
+          ctx.beginPath();
+          ctx.moveTo(...p0);
+          ctx.bezierCurveTo(...cp1, ...cp2, ...p1);
+          ctx.stroke();
+          ctx.restore();
+        }, 100);
+      }
+
+    }
+
+    function getValues(selector) {
+      return select(selector).value.split(',').map(d => parseFloat(d))
+    }
+
+    select('#render2').onsubmit = e => {
+      e.preventDefault();
+      p0 = getValues('#sp2');
+      p1 = getValues('#ep2');
+      cp1 = getValues('#cp2-0');
+      cp2 = getValues('#cp2-1');
+
+      x = bezierCurveCreator(p0[0], cp1[0], cp2[0], p1[0]);
+      y = bezierCurveCreator(p0[1], cp1[1], cp2[1], p1[1]);
+
+      // ctx.fillStyle = 'rgba(255,255,255,0.1)';
+      // ctx.clearRect(0, 0, width, height);
+      render2();
+    }
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+

@@ -17,7 +17,7 @@ function select(selector) {
   return document.querySelector(selector);
 }
 
-class CanvasCtx{
+class CanvasCtx {
   constructor(selector) {
     let me = this;
     me._initCanvas(selector);
@@ -27,18 +27,35 @@ class CanvasCtx{
     return this._ctx
   }
 
+  get context() {
+    return this._ctx
+  }
+
+  get width() {
+    return this._width;
+  }
+
+  get height() {
+    return this._height;
+  }
+
   _initCanvas(selector) {
     let me = this;
     let wrap = document.querySelector(selector);
     let canvas = createElement('canvas');
 
-    canvas.width = wrap.clientWidth;
-    canvas.height = wrap.clientHeight;
+    let width = wrap.clientWidth;
+    let height = wrap.clientHeight;
+
+    canvas.width = width;
+    canvas.height = height;
 
     append(wrap, canvas);
 
     if (canvas.getContext) {
       me._ctx = canvas.getContext('2d');
+      me._width = width;
+      me._height = height;
     } else {
       console.error('canvas-unsupported !!!!')
     }

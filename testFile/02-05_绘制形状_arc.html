@@ -58,6 +58,7 @@
   </div>
 
   <canvas id="canvas" width="150" height="200"></canvas>
+  <canvas id="canvas2" width="300" height="200"></canvas>
 
 </div>
 
@@ -93,5 +94,39 @@
   }
 
   arc();
+
+  function actTo() {
+    let canvas = document.getElementById('canvas2');
+    if (canvas.getContext) {
+      let ctx = canvas.getContext('2d');
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.moveTo(150, 20);
+      ctx.arcTo(150, 100, 50, 20, 30);
+      ctx.stroke();
+
+      ctx.fillStyle = 'blue';
+      // base point
+      ctx.fillRect(150, 20, 10, 10);
+
+      ctx.fillStyle = 'red';
+      // cp1
+      ctx.fillRect(150, 100, 10, 10);
+      // cp2
+      ctx.fillRect(50, 20, 10, 10);
+
+      // line
+      ctx.setLineDash([5, 5]);
+      ctx.moveTo(150, 20);
+      ctx.lineTo(150, 100);
+      ctx.lineTo(50, 20);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(120,38,30,0,2*Math.PI);
+      ctx.stroke();
+    }
+  }
+
+  actTo();
 
 </script>
